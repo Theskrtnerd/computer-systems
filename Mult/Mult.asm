@@ -78,6 +78,7 @@ M=-D
 	D=M	// D = y
 	@R0
 	M=D+M	// sum = sum + y
+    
 	@1
 	D=A	// D = 1
 	@x

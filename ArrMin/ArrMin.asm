@@ -5,11 +5,11 @@
 // PSEUDO code
 // x = R1
 // y = R2
-// z = R1
+// z = R0
 // y = y-1
 // while(y > 0) {
 //     x = x+1
-//     if M(x)-z < 0 then z = M(x)
+//     if M(x)-R0 < 0 then R0 = M(x)
 //     y--
 // }
 // R0 = z
@@ -23,6 +23,78 @@ M=D // x = R1
 D=M
 @y
 M=D // y = R2
+
+@x
+D=M
+@z
+A=D
+D=M
+@R0
+M=D // R0 = M(x)
+
+@1
+D=A
+@y
+M=M-D // y = y-1
+
+(WHILE)
+    @y
+	D=M
+
+	@END
+	D;JLE	// if y <= 0 goto END
+
+    @1
+    D=A
+    @x
+    M=M+D // x = x+1
+
+    @x
+    D=M
+    @z
+    A=D
+    D=M
+
+    // @R0
+    // D=D-M
+
+    // @ENDIF
+    // D;JLE
+
+    @R0
+    D=D-M
+    @t
+    M=D
+
+    @t
+    D=M
+    @ENDIF
+    D;JLE
+
+    @1
+    D=A
+    @y
+    M=M-D
+
+    @WHILE
+    0;JMP
+
+(ENDIF)
+    @x
+    D=M
+    @z
+    A=D
+    D=M
+    @R0
+    M=D
+
+    @1
+    D=A
+    @y
+    M=M-D
+
+    @WHILE
+    0;JMP
 
 (END)
     @END
