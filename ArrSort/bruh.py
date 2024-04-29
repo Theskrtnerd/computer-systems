@@ -31,11 +31,11 @@ def merge_sort(arr):
         r3 *= 2
 
 import random
-large_list = list(range(10, 0, -1))
+large_list = list(range(-10, 10, 1))
 random.shuffle(large_list)
 
 # Example usage:
-arr = large_list
+arr = [-2,1,-4,3]
 print(arr)
 merge_sort(arr)
 print("Merge Sorted array is:", arr)
