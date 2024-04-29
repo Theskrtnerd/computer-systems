@@ -2,7 +2,7 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
- @N
+    @N
     M=0
     @R1
     A=M
