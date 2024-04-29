@@ -2,100 +2,80 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
-// PSEUDO code
-// x = R1
-// y = R2
-// z = R0
-// y = y-1
-// while(y > 0) {
-//     x = x+1
-//     if M(x)-R0 < 0 then R0 = M(x)
-//     y--
-// }
-// R0 = z
-
-@R1
-D=M
-@x
-M=D // x = R1
-
-@R2
-D=M
-@y
-M=D // y = R2
-
-@x
-D=M
-@z
-A=D
-D=M
-@R0
-M=D // R0 = M(x)
-
-@1
-D=A
-@y
-M=M-D // y = y-1
-
-(WHILE)
-    @y
-	D=M
-
-	@END
-	D;JLE	// if y <= 0 goto END
-
-    @1
-    D=A
-    @x
-    M=M+D // x = x+1
-
-    @x
+ @N
+    M=0
+    @R1
+    A=M
     D=M
-    @z
-    A=D
+    @R0
+    M=D
+    @N
+    M=1
+
+(LOOP)
+    @N
     D=M
-
-    // @R0
-    // D=D-M
-
-    // @ENDIF
-    // D;JLE
-
+    @R2
+    D=D-M
+    @END
+    D;JEQ
+    @R0
+    D=M
+    @NEGR0
+    D;JLT
+    @POSR0
+    D;JGT
+(SAME)
     @R0
     D=D-M
-    @t
-    M=D
+    @MIN
+    D;JLT
+    @N
+    M=M+1
+    @LOOP
+    0;JMP
+(END)
+    @END
+    0;JMP
+    
 
-    @t
+(NEGR0)
+    @R1
     D=M
-    @ENDIF
-    D;JLE
-
-    @1
-    D=A
-    @y
-    M=M-D
-
-    @WHILE
+    @N
+    A=D+M
+    D=M
+    @SAME
+    D;JLT
+    @N
+    M=M+1
+    @LOOP
     0;JMP
 
-(ENDIF)
-    @x
+(POSR0)
+    @R1
     D=M
-    @z
-    A=D
+    @N
+    A=D+M
+    D=M
+    @SAME
+    D;JGT
+    @R0
+    M=D
+    @N
+    M=M+1
+    @LOOP
+    0;JMP
+
+(MIN)
+    @R1
+    D=M
+    @N
+    A=D+M
     D=M
     @R0
     M=D
-
-    @1
-    D=A
-    @y
-    M=M-D
-
-    @WHILE
-    0;JMP
-
-(END)
-    @END
+    @N
+    M=M+1
+    @LOOP
     0;JMP
