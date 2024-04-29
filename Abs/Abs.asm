@@ -15,7 +15,7 @@ M=D // x = R1
 
 @x
 D=M
-@END
+@CHECK
 D;JGE
 
 @x
@@ -23,10 +23,12 @@ D=M
 @x
 M=-D
 
-(END)
-    @END
+(CHECK)
     @x
     D=M
     @R0
     M=D
+
+(END)
+    @END
     0;JMP
