@@ -116,12 +116,6 @@ M=D+1 // i += 1
 @WHILEC
 0;JMP
 (FINALIF) // else
-@1
-D=M
-@12
-D=D+M
-@14
-M=D // r14 = address(arr[j])
 @14
 A=M
 D=M
