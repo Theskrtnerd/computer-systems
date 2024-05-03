@@ -14,7 +14,7 @@ set RAM[2]  3,  // Set R2
 set RAM[20] 5,  // Set Arr[0]
 set RAM[21] 9,  // Set Arr[1]
 set RAM[22] 7,  // Set Arr[2]
-repeat 300 {
+repeat 1000 {
   ticktock;    // Run for 300 clock cycles
 }
 set RAM[1] 20,  // Restore arguments in case program used them
