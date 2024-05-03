@@ -1,10 +1,10 @@
-// Sample Test file for ArrMin.asm
+// Sample Test file for ArrSort.asm
 // Follows the Test Scripting Language format described in 
 // Appendix B of the book "The Elements of Computing Systems"
 
-load ArrMin.asm,
-output-file ArrMin05.out,
-compare-to ArrMin05.cmp,
+load ArrSort.asm,
+output-file ArrSort05.out,
+compare-to ArrSort05.cmp,
 output-list RAM[0]%D2.6.2 RAM[1]%D2.6.2 RAM[2]%D2.6.2 RAM[20]%D2.6.2;
 
 set PC 0,
