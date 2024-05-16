@@ -3,3 +3,21 @@
 
 // Put your code here.
 
+function Fib.fib 1
+    push argument 0
+    push constant 2
+    lt
+    if-goto RETURN_EDGE
+    push argument 0
+    push constant 2
+    sub
+    call Fib.fib 1
+    push argument 0
+    push constant 1
+    sub
+    call Fib.fib 1
+    add
+    return
+label RETURN_EDGE
+    push argument 0
+    return

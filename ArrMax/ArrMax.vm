@@ -3,3 +3,51 @@
 
 // Put your code here.
 
+// ArrMax (m, n)
+function ArrMax.arrMax 2
+push argument 0
+pop pointer 0 // pointer = m
+
+push this 0
+pop temp 0 // maxVal = m[0]
+
+push constant 1
+pop temp 1 // counter = 1
+
+goto WHILE_COND
+
+label WHILE_COND
+    push temp 1
+    push argument 1
+    lt
+    if-goto WHILE_BODY // if counter < n goto WHILE_BODY
+    goto WHILE_END
+
+label WHILE_BODY
+    push pointer 0
+    push constant 1
+    add
+    pop pointer 0 // pointer++
+
+    push this 0
+    push temp 0
+    gt // if next > maxVal
+    if-goto COMPARE_TRUE
+    goto WHILE_NEXT
+
+label COMPARE_TRUE
+    push this 0
+    pop temp 0 // maxVal = next
+    goto WHILE_NEXT
+
+label WHILE_NEXT
+    push temp 1
+    push constant 1
+    add
+    pop temp 1 // counter++
+    goto WHILE_COND
+
+label WHILE_END
+    push temp 0
+    return
+
