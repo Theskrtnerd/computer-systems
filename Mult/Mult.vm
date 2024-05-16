@@ -3,8 +3,29 @@
 // x & y are static variables
 
 // Put your code here.
+push constant 0
+pop local 0 // a = 0
 
+push static 0
+pop temp 0 // t = x
 
+label WHILE_COND
+    push temp 0
+    push constant 0
+    gt
+    if-goto WHILE_BODY    // if t > 0, goto WHILE_BODY
+    goto END        // else, goto WHILE_END
+
+label WHILE_BODY
+    push local 0
+    push static 1
+    add
+    pop local 0 // a = a + y
+    push temp 0
+    push constant 1
+    sub
+    pop temp 0        // t = t - 1
+    goto WHILE_COND
 
 label END
 goto END
