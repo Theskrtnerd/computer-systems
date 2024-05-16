@@ -6,15 +6,29 @@
 push constant 0
 pop local 0 // a = 0
 
+push constant 1
+pop temp 1 // isPos = True
+
 push static 0
 pop temp 0 // t = x
+
+push temp 0
+push constant 0
+gt
+if-goto WHILE_COND  // if t > 0 go to WHILE_COND
+push temp 0
+neg
+pop temp 0 // else t = -t
+push constant 0
+pop temp 1 // isPos = False
+goto WHILE_COND
 
 label WHILE_COND
     push temp 0
     push constant 0
     gt
     if-goto WHILE_BODY    // if t > 0, goto WHILE_BODY
-    goto END        // else, goto WHILE_END
+    goto WHILE_END        // else, goto WHILE_END
 
 label WHILE_BODY
     push local 0
@@ -26,6 +40,16 @@ label WHILE_BODY
     sub
     pop temp 0        // t = t - 1
     goto WHILE_COND
+
+label WHILE_END
+    push temp 1
+    push constant 0
+    gt
+    if-goto END // if isPos > 0 gotoEND
+    push local 0
+    neg
+    pop local 0
+    goto END
 
 label END
 goto END
