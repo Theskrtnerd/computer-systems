@@ -54,7 +54,7 @@ class VMTranslator:
 
     def vm_sub():
         '''Generate Hack Assembly code for a VM sub operation'''
-        return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D-M'
+        return '@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nM=M-D\n@SP\nM=M+1'
 
     def vm_neg():
         '''Generate Hack Assembly code for a VM neg operation'''
