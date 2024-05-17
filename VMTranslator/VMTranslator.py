@@ -29,9 +29,8 @@ class VMTranslator:
                 raise Exception("0 and 1 are the only allowed values for pointer instruction : ", segment, offset)
         elif segment == "constant":
             asm_string = f'@{offset}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1'
-            
         else:
-            raise Exception("Invalid Pop Instruction: ", segment, offset)
+            raise Exception("Invalid Push Instruction: ", segment, offset)
 
         return asm_string
 
