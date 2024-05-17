@@ -39,14 +39,12 @@ class VMTranslator:
         elif segment == "temp":
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
-            asm_string = f'@{16+offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            asm_string = f'@SP\nM=M-1\nA=M\nD=M\n@{16+offset}\nM=D'
             #raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
-        elif segment == "constant":
-            asm_string = f'@SP\nM=M-1\nA=M\nD=M\n@{16+offset}\nM=D'
         else:
-            raise Exception("Invalid Push Instruction: ", segment, offset)
+            raise Exception("Invalid Pop Instruction: ", segment, offset)
 
         return asm_string
     
