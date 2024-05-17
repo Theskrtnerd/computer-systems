@@ -37,12 +37,12 @@ class VMTranslator:
         if segment in segment_list.keys():
             asm_string = f'@SP\nM=M-1\n@{segment_list[segment]}\nD=M\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         elif segment == "temp":
-            asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            asm_string = f'@SP\nM=M-1\n@R5\nD=A\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         elif segment == "static":
             asm_string = f'@SP\nM=M-1\nA=M\nD=M\n@{16+offset}\nM=D'
             #raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
-            asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            asm_string = f'@SP\nM=M-1\n@R3\nD=A\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         else:
             raise Exception("Invalid Pop Instruction: ", segment, offset)
 
