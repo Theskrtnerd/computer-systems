@@ -1,3 +1,4 @@
+import sys
 class VMTranslator:
 
     def vm_push(segment, offset):
