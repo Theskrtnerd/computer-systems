@@ -1,6 +1,6 @@
 class VMTranslator:
 
-    def vm_push(segment, offset, filename):
+    def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
         common_string = f'\nD=M\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         asm_string = ""
@@ -15,7 +15,7 @@ class VMTranslator:
         elif segment == "temp":
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
-            asm_string = f'@{filename.split(".")[0]}.{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            #asm_string = f'@{filename.split(".")[0]}.{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
             raise Exception(asm_string,segment, offset)
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
@@ -26,7 +26,7 @@ class VMTranslator:
 
         return asm_string
 
-    def vm_pop(segment, offset, filename):
+    def vm_pop(segment, offset):
         '''Generate Hack Assembly code for a VM pop operation'''
         common_string = f"\n@13\nM=D\n@{offset}\nD=A\n@13\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@13\nA=M\nM=D\n"
         asm_string = ""
