@@ -106,10 +106,23 @@ class VMTranslator:
 
     def vm_function(function_name, n_vars):
         '''Generate Hack Assembly code for a VM function operation'''
-        return ""
+        asm_string = f"(FUNCTION_{function_name})"
+        for i in range(n_vars):
+            asm_string += "\n@SP\nA=M\nM=0\n@SP\nM=M+1"
+        return asm_string
 
     def vm_call(function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
+        asm_string = f"@RETURN_FUNCTION_{function_name}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        asm_string += "\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1" 
+        asm_string += "\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        asm_string += "\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        asm_string += "\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        asm_string += f"\n@SP\nD=M\n@{n_args}\nD=D-A\n@5\nD=D-A\n@ARG\nM=D"
+        asm_string += f"\n@SP\nD=M\n@LCL\nM=D"
+        asm_string += f"\n@FUNCTION_{function_name}\n0;JMP"
+        asm_string += f"(RETURN_FUNCTION_{function_name})"
+
         return ""
 
     def vm_return():
