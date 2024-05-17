@@ -1,8 +1,6 @@
 global jumpTrack
 jumpTrack = 0
 
-global labels
-labels = []
 class VMTranslator:
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
@@ -96,23 +94,15 @@ class VMTranslator:
 
     def vm_label(label):
         '''Generate Hack Assembly code for a VM label operation'''
-        global labels
-        labels.append(label)
         return f"({label})"
 
     def vm_goto(label):
         '''Generate Hack Assembly code for a VM goto operation'''
-        global labels
-        if label in labels:
-            return f"@{label}\n0;JMP"
-        raise Exception(f"Label {label} not found!")
+        return f"@{label}\n0;JMP"
 
     def vm_if(label):
         '''Generate Hack Assembly code for a VM if-goto operation'''
-        global labels
-        if label in labels:
-            return f"\n@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE"
-        raise Exception(f"Label {label} not found!")
+        return f"\n@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE"
 
     def vm_function(function_name, n_vars):
         '''Generate Hack Assembly code for a VM function operation'''
