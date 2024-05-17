@@ -1,3 +1,5 @@
+global jumpTrack
+jumpTrack = 0
 class VMTranslator:
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
@@ -61,15 +63,21 @@ class VMTranslator:
 
     def vm_eq():
         '''Generate Hack Assembly code for a VM eq operation'''
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_EQ\nD;JEQ\n@SP\nA=M-1\nM=0\n@JUMP_END_EQ\n0;JMP\n(JUMP_START_EQ)\n@SP\nA=M-1\nM=-1\n(JUMP_END_EQ)\n"
+        global jumpTrack
+        jumpTrack +=1
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JEQ\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})\n"
 
     def vm_gt():
         '''Generate Hack Assembly code for a VM gt operation'''
-        return "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_GT\nD;JGT\n@SP\nA=M-1\nM=0\n@JUMP_END_GT\n0;JMP\n(JUMP_START_GT)\n@SP\nA=M-1\nM=-1\n(JUMP_END_GT)\n"
+        global jumpTrack
+        jumpTrack +=1
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JGT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})\n"
 
     def vm_lt():
         '''Generate Hack Assembly code for a VM lt operation'''
-        return "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_LT\nD;JLT\n@SP\nA=M-1\nM=0\n@JUMP_END_LT\n0;JMP\n(JUMP_START_LT)\n@SP\nA=M-1\nM=-1\n(JUMP_END_LT)\n"
+        global jumpTrack
+        jumpTrack +=1
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JLT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})\n"
 
     def vm_and():
         '''Generate Hack Assembly code for a VM and operation'''
