@@ -15,7 +15,7 @@ class VMTranslator:
         elif segment == "temp":
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
-            #asm_string = f'@{filename.split(".")[0]}.{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            asm_string = f'@{16+offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
             raise Exception(asm_string,segment, offset)
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
@@ -158,9 +158,9 @@ if __name__ == "__main__":
                         print(VMTranslator.vm_if(tokens[1]))
                 elif(len(tokens)==3):
                     if(tokens[0]=='push'):
-                        print(VMTranslator.vm_push(tokens[1],int(tokens[2]),sys.argv[1]))
+                        print(VMTranslator.vm_push(tokens[1],int(tokens[2])))
                     elif(tokens[0]=='pop'):
-                        print(VMTranslator.vm_pop(tokens[1],int(tokens[2]),sys.argv[1]))
+                        print(VMTranslator.vm_pop(tokens[1],int(tokens[2])))
                     elif(tokens[0]=='function'):
                         print(VMTranslator.vm_function(tokens[1],int(tokens[2])))
                     elif(tokens[0]=='call'):
