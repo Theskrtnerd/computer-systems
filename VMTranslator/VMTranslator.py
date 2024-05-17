@@ -45,7 +45,7 @@ class VMTranslator:
                 raise Exception("Invalid Pop Temp (out of range [5-12]) ", segment, offset)
         elif segment == "static":
             if int(offset)>=0 and int(offset)<=238: # 16-255
-                asm_string = f"@{16+offset}\nD=A\n@R15\nM=D\n@SP\nAM=M-1\nD=M\n@R15\nA=M\nM=D"
+                asm_string = f"@{16+int(offset)}\nD=A\n@R15\nM=D\n@SP\nAM=M-1\nD=M\n@R15\nA=M\nM=D"
             else:
                 raise Exception("Pop static is out of Range [16-255]) : ", segment, offset)
         elif segment == "pointer":
