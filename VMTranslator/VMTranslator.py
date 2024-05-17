@@ -66,19 +66,19 @@ class VMTranslator:
         '''Generate Hack Assembly code for a VM eq operation'''
         global jumpTrack
         jumpTrack +=1
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JEQ\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})\n"
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JEQ\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})"
 
     def vm_gt():
         '''Generate Hack Assembly code for a VM gt operation'''
         global jumpTrack
         jumpTrack +=1
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JGT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})\n"
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JGT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})"
 
     def vm_lt():
         '''Generate Hack Assembly code for a VM lt operation'''
         global jumpTrack
         jumpTrack +=1
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JLT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})\n"
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JLT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})"
 
     def vm_and():
         '''Generate Hack Assembly code for a VM and operation'''
@@ -121,13 +121,22 @@ class VMTranslator:
         asm_string += f"\n@SP\nD=M\n@{n_args}\nD=D-A\n@5\nD=D-A\n@ARG\nM=D"
         asm_string += f"\n@SP\nD=M\n@LCL\nM=D"
         asm_string += f"\n@FUNCTION_{function_name}\n0;JMP"
-        asm_string += f"(RETURN_FUNCTION_{function_name})"
+        asm_string += f"\n(RETURN_FUNCTION_{function_name})"
 
-        return ""
+        return asm_string
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
-        return ""
+        asm_string = "@LCL\nD=M\n@13\nM=D"
+        asm_string += "\n@5\nA=D-A\nD=M\n@14\nM=D"
+        asm_string += "\n@SP\nAM=M-1\nD=M\n@ARG\nA=M\nM=D"
+        asm_string += "\n@ARG\nD=M+1\n@SP\nM=D"
+        asm_string += "\n@13\nAM=M-1\nD=M\n@THAT\nM=D"
+        asm_string += "\n@13\nAM=M-1\nD=M\n@THIS\nM=D"
+        asm_string += "\n@13\nAM=M-1\nD=M\n@ARG\nM=D"
+        asm_string += "\n@13\nAM=M-1\nD=M\n@LCL\nM=D"
+        asm_string += "\n@14\nA=M\n0;JMP"
+        return asm_string
 
 # A quick-and-dirty parser when run as a standalone script.
 if __name__ == "__main__":
