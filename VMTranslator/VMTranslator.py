@@ -17,7 +17,7 @@ class VMTranslator:
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
             print(segment, offset)
-            asm_string = f'@{(sys.argv[1].split("."))[0]}.{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            asm_string = f'@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "constant":
