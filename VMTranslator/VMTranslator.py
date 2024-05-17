@@ -2,20 +2,19 @@ class VMTranslator:
 
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
-        common_string = f'\nD=M\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+        segment_list = {
+            "local": "LCL",
+            "argument": "ARG",
+            "this": "THIS",
+            "that": "THAT"
+        }
         asm_string = ""
-        if segment == "local":
-            asm_string = "@LCL" + common_string
-        elif segment == "argument":
-            asm_string = "@ARG" + common_string
-        elif segment == "this":
-            asm_string = "@THIS" + common_string
-        elif segment == "that":
-            asm_string = "@THAT" + common_string
+        if segment in segment_list.keys():
+            asm_string = f'@{segment_list[segment]}\nD=M\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "temp":
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
-            asm_string = f'@{16+int(offset)}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            asm_string = f'@{16+offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
             #raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
@@ -28,39 +27,29 @@ class VMTranslator:
 
     def vm_pop(segment, offset):
         '''Generate Hack Assembly code for a VM pop operation'''
-        common_string = f"\n@13\nM=D\n@{offset}\nD=A\n@13\nM=D+M\n@SP\nM=M-1\nA=M\nD=M\n@13\nA=M\nM=D\n"
+        segment_list = {
+            "local": "LCL",
+            "argument": "ARG",
+            "this": "THIS",
+            "that": "THAT"
+        }
         asm_string = ""
-        if segment == "local":
-            asm_string = "@LCL\nD=M" + common_string
-        elif segment == "argument":
-            asm_string = "@ARG\nD=M" + common_string
-        elif segment == "this":
-            asm_string = "@THIS\nD=M" + common_string
-        elif segment == "that":
-            asm_string = "@THAT\nD=M" + common_string
+        if segment in segment_list.keys():
+            asm_string = f'@SP\nM=M-1\n@{segment_list[segment]}\nD=M\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         elif segment == "temp":
-            if int(offset) >= 0 and int(offset) <= 7:
-                asm_string = "@5\nD=A" + common_string
-            else:
-                raise Exception("Invalid Pop Temp (out of range [5-12]) ", segment, offset)
+            asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
-            if int(offset)>=0 and int(offset)<=238: # 16-255
-                asm_string = f"@{16+int(offset)}\nD=A\n@R15\nM=D\n@SP\nAM=M-1\nD=M\n@R15\nA=M\nM=D"
-            else:
-                raise Exception("Pop static is out of Range [16-255]) : ", segment, offset)
+            asm_string = f'@{16+offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            #raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
-            if str(offset) in ["0","1"]:
-                if str(offset)=="0":
-                    asm_string = f"@SP\nM=M-1\nA=M\nD=M\n@THIS\nM=D\n"
-                else:
-                    asm_string = f"@SP\nM=M-1\nA=M\nD=M\n@THAT\nM=D\n"
-            else:
-                raise Exception("0 and 1 are the only allowed values for pointer instruction: ", segment, offset)
+            asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+        elif segment == "constant":
+            asm_string = f'@SP\nM=M-1\nA=M\nD=M\n@{16+offset}\nM=D'
         else:
-            raise Exception("Invalid Pop Instruction: ", segment, offset)
+            raise Exception("Invalid Push Instruction: ", segment, offset)
 
         return asm_string
-
+    
     def vm_add():
         '''Generate Hack Assembly code for a VM add operation'''
         return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D+M'
