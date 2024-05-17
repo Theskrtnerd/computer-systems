@@ -15,8 +15,8 @@ class VMTranslator:
         elif segment == "temp":
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
-            asm_string = f'@{16+offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
-            raise Exception(asm_string,segment, offset)
+            asm_string = f'@{16+int(offset)}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "constant":
