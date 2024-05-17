@@ -2,21 +2,18 @@ class VMTranslator:
 
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
-        common_string = f"\n@13\nM=D\n@{offset}\nD=A\n@13\nM=D+M\nA=M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+        common_string = f'\nD=M\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         asm_string = ""
         if segment == "local":
-            asm_string = "@LCL\nD=M" + common_string
+            asm_string = "@LCL" + common_string
         elif segment == "argument":
-            asm_string = "@ARG\nD=M" + common_string
+            asm_string = "@ARG" + common_string
         elif segment == "this":
-            asm_string = "@THIS\nD=M" + common_string
+            asm_string = "@THIS" + common_string
         elif segment == "that":
-            asm_string = "@THAT\nD=M" + common_string
+            asm_string = "@THAT" + common_string
         elif segment == "temp":
-            if int(offset) >= 0 and int(offset) <= 7:
-                asm_string = "@5\nD=A" + common_string
-            else:
-                raise Exception("Invalid Push Temp (out of range [5-12]) ", segment, offset)
+            asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
             if int(offset)>=0 and int(offset)<=238: # 16-255
                 asm_string = f"@static.{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
@@ -31,7 +28,8 @@ class VMTranslator:
             else:
                 raise Exception("0 and 1 are the only allowed values for pointer instruction : ", segment, offset)
         elif segment == "constant":
-            asm_string = f"@{offset}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            asm_string = f'@{offset}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1'
+            
         else:
             raise Exception("Invalid Pop Instruction: ", segment, offset)
 
