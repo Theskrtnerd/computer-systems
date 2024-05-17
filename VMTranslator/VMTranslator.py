@@ -74,15 +74,15 @@ class VMTranslator:
 
     def vm_add():
         '''Generate Hack Assembly code for a VM add operation'''
-        return ""
+        return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D+M'
 
     def vm_sub():
         '''Generate Hack Assembly code for a VM sub operation'''
-        return ""
+        return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D-M'
 
     def vm_neg():
         '''Generate Hack Assembly code for a VM neg operation'''
-        return ""
+        return '@SP\nM=M-1\nA=M\nM=-M\n@SP\nM=M+1'
 
     def vm_eq():
         '''Generate Hack Assembly code for a VM eq operation'''
@@ -98,15 +98,15 @@ class VMTranslator:
 
     def vm_and():
         '''Generate Hack Assembly code for a VM and operation'''
-        return ""
+        return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D&M'
 
     def vm_or():
         '''Generate Hack Assembly code for a VM or operation'''
-        return ""
+        return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D|M'
 
     def vm_not():
         '''Generate Hack Assembly code for a VM not operation'''
-        return ""
+        return '@SP\nM=M-1\nA=M\nM=!M\n@SP\nM=M+1'
 
     def vm_label(label):
         '''Generate Hack Assembly code for a VM label operation'''
