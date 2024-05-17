@@ -19,15 +19,15 @@ class VMTranslator:
                 raise Exception("Invalid Push Temp (out of range [5-12]) ", segment, offset)
         elif segment == "static":
             if int(offset)>=0 and int(offset)<=238: # 16-255
-                asm_string = f"@static.{offset}\nD=A\n@R15\nM=D\n@SP\nAM=M-1\nD=M\n@R15\nA=M\nM=D"
+                asm_string = f"@static.{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
             else:
                 raise Exception("Push static is out of Range [16-255]) : ", segment, offset)
         elif segment == "pointer":
             if str(offset) in ["0","1"]:
                 if str(offset)=="0":
-                    asm_string = f"@SP\nM=M-1\nA=M\nD=M\n@THIS\nM=D\n"
+                    asm_string = f"@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
                 else:
-                    asm_string = f"@SP\nM=M-1\nA=M\nD=M\n@THAT\nM=D\n"
+                    asm_string = f"@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
             else:
                 raise Exception("0 and 1 are the only allowed values for pointer instruction : ", segment, offset)
         elif segment == "constant":
@@ -67,8 +67,6 @@ class VMTranslator:
                     asm_string = f"@SP\nM=M-1\nA=M\nD=M\n@THAT\nM=D\n"
             else:
                 raise Exception("0 and 1 are the only allowed values for pointer instruction: ", segment, offset)
-        elif segment == "constant":
-            asm_string = f"@{offset}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         else:
             raise Exception("Invalid Pop Instruction: ", segment, offset)
 
