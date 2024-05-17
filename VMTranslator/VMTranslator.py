@@ -1,5 +1,4 @@
 class VMTranslator:
-
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
         segment_list = {
@@ -62,15 +61,15 @@ class VMTranslator:
 
     def vm_eq():
         '''Generate Hack Assembly code for a VM eq operation'''
-        return ""
+        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_EQ\nD;JEQ\n@SP\nA=M-1\nM=0\n@JUMP_END_EQ\n0;JMP\n(JUMP_START_EQ)\n@SP\nA=M-1\nM=-1\n(JUMP_END_EQ)\n"
 
     def vm_gt():
         '''Generate Hack Assembly code for a VM gt operation'''
-        return ""
+        return "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_GT\nD;JGT\n@SP\nA=M-1\nM=0\n@JUMP_END_GT\n0;JMP\n(JUMP_START_GT)\n@SP\nA=M-1\nM=-1\n(JUMP_END_GT)\n"
 
     def vm_lt():
         '''Generate Hack Assembly code for a VM lt operation'''
-        return ""
+        return "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_LT\nD;JLT\n@SP\nA=M-1\nM=0\n@JUMP_END_LT\n0;JMP\n(JUMP_START_LT)\n@SP\nA=M-1\nM=-1\n(JUMP_END_LT)\n"
 
     def vm_and():
         '''Generate Hack Assembly code for a VM and operation'''
