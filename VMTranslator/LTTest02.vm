@@ -1,0 +1,4 @@
+push constant 1
+push constant 1
+lt
+pop static 0

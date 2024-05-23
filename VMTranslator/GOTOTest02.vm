@@ -1,0 +1,5 @@
+goto SKIP
+push constant 1
+push constant 1
+and
+label SKIP

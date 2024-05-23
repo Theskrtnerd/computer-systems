@@ -1,0 +1,7 @@
+push constant 9
+push constant 10
+lt
+if-goto SKIP
+push constant 10
+pop static 0
+label SKIP

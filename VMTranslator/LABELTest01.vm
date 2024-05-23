@@ -1,0 +1,2 @@
+label LOOP
+goto LOOP

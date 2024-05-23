@@ -1,0 +1,6 @@
+push constant 10
+pop static 0
+push constant 10
+pop temp 0
+push constant 10
+pop pointer 0
