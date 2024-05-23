@@ -28,7 +28,7 @@ set argument[0] -100,  // argument 0
 set argument[1] -200,  // argument 1
 set argument[2] -300;  // argument 2
 
-repeat 25 {        // Change this number to cover the number of instructions in the VM test file
+repeat 50 {        // Change this number to cover the number of instructions in the VM test file
   vmstep;
 }
 output;

@@ -1,4 +1,4 @@
-push constant 9
-push constant 10
+push constant 8
+push constant 12
 lt
 pop static 0

@@ -1,8 +1,8 @@
-push constant 10
+push constant 13
 pop local 0
-push constant 10
+push constant 13
 pop this 0
-push constant 10
+push constant 13
 pop that 0
-push constant 10
+push constant 13
 pop argument 0

@@ -1,2 +1,2 @@
-label LOOP
-goto LOOP
+label THISLABEL
+goto THISLABEL

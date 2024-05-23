@@ -1,4 +1,4 @@
-push constant 12
+push constant 19
 push constant 5
-sub
+gt
 pop static 0

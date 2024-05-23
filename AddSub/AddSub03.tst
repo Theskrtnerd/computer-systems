@@ -16,13 +16,13 @@ set argument 400,  // base address of the argument segment
 set this 3000,     // base address of the this segment
 set that 3010,     // base address of the that segment
 
-set RAM[16] 0,  // static 0
-set RAM[17] 2,  // static 1
-set RAM[18] 3,  // static 2
+set RAM[16] 23,  // static 0
+set RAM[17] 5,  // static 1
+set RAM[18] 20,  // static 2
 
-set local[0] 0,  // local 0
-set local[1] 0,  // local 1
-set local[2] 30,  // local 2
+set local[0] 24,  // local 0
+set local[1] 4,  // local 1
+set local[2] 44,  // local 2
 
 set argument[0] 100,  // argument 0
 set argument[1] 200,  // argument 1

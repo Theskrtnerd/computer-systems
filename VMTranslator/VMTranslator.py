@@ -51,7 +51,7 @@ class VMTranslator:
             raise Exception("Invalid Pop Instruction: ", segment, offset)
 
         return asm_string
-    
+
     def vm_add():
         '''Generate Hack Assembly code for a VM add operation'''
         return '@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=D+M'
@@ -125,7 +125,7 @@ class VMTranslator:
     def vm_call(function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
         asm_string = f"@RETURN_FUNCTION_{function_name}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1"
-        asm_string += "\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1" 
+        asm_string += "\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         asm_string += "\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         asm_string += "\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         asm_string += "\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
@@ -194,5 +194,3 @@ if __name__ == "__main__":
                         print(VMTranslator.vm_function(tokens[1], int(tokens[2])))
                     elif (tokens[0] == 'call'):
                         print(VMTranslator.vm_call(tokens[1], int(tokens[2])))
-
-        

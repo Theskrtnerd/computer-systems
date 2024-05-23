@@ -1,7 +1,7 @@
-push constant 10
-push constant 9
+push constant 11
+push constant 8
 lt
 if-goto SKIP
-push constant 10
+push constant 11
 pop static 0
 label SKIP

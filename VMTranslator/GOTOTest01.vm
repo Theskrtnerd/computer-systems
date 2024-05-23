@@ -1,6 +1,6 @@
 label LOOP
-push constant 1
 push constant 2
+push constant 3
 add
 pop static 0
 goto LOOP

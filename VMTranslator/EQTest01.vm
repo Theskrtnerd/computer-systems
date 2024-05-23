@@ -1,4 +1,4 @@
-push constant 10
-push constant 9
+push constant 17
+push constant 4
 eq
 pop static 0

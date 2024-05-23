@@ -1,4 +1,4 @@
-push constant 1
-push constant 1
+push constant 5
+push constant 5
 gt
 pop static 0
