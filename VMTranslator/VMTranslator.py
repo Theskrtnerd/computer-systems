@@ -1,6 +1,7 @@
 global jumpTrack
 jumpTrack = 0
 
+
 class VMTranslator:
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
@@ -17,7 +18,7 @@ class VMTranslator:
             asm_string = f'@R5\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "static":
             asm_string = f'@{16+offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
-            #raise Exception(asm_string,segment, 16+offset)
+            # raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
             asm_string = f'@R3\nD=A\n@{offset}\nD=D+A\nA=D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1'
         elif segment == "constant":
@@ -37,12 +38,13 @@ class VMTranslator:
         }
         asm_string = ""
         if segment in segment_list.keys():
-            asm_string = f'@SP\nM=M-1\n@{segment_list[segment]}\nD=M\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
+            asm_string = f'@SP\nM=M-1\n@{segment_list[segment]}\nD=M\n@{offset}'
+            asm_string += '\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         elif segment == "temp":
             asm_string = f'@SP\nM=M-1\n@R5\nD=A\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         elif segment == "static":
             asm_string = f'@SP\nM=M-1\nA=M\nD=M\n@{16+offset}\nM=D'
-            #raise Exception(asm_string,segment, 16+offset)
+            # raise Exception(asm_string,segment, 16+offset)
         elif segment == "pointer":
             asm_string = f'@SP\nM=M-1\n@R3\nD=A\n@{offset}\nD=D+A\n@R13\nM=D\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D'
         else:
@@ -65,20 +67,29 @@ class VMTranslator:
     def vm_eq():
         '''Generate Hack Assembly code for a VM eq operation'''
         global jumpTrack
-        jumpTrack +=1
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JEQ\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})"
+        jumpTrack += 1
+        asm_string = f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JEQ\n@SP\nA=M-1\nM=0"
+        asm_string += f"\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1"
+        asm_string += f"\nM=-1\n(JUMP_END_{jumpTrack})"
+        return asm_string
 
     def vm_gt():
         '''Generate Hack Assembly code for a VM gt operation'''
         global jumpTrack
-        jumpTrack +=1
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JGT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})"
+        jumpTrack += 1
+        asm_string = f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JGT\n@SP\nA=M-1\nM=0"
+        asm_string += f"\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1"
+        asm_string += f"\n(JUMP_END_{jumpTrack})"
+        return asm_string
 
     def vm_lt():
         '''Generate Hack Assembly code for a VM lt operation'''
         global jumpTrack
-        jumpTrack +=1
-        return f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JLT\n@SP\nA=M-1\nM=0\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1\n(JUMP_END_{jumpTrack})"
+        jumpTrack += 1
+        asm_string = f"@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JUMP_START_{jumpTrack}\nD;JLT\n@SP\nA=M-1\nM=0"
+        asm_string += f"\n@JUMP_END_{jumpTrack}\n0;JMP\n(JUMP_START_{jumpTrack})\n@SP\nA=M-1\nM=-1"
+        asm_string += f"\n(JUMP_END_{jumpTrack})"
+        return asm_string
 
     def vm_and():
         '''Generate Hack Assembly code for a VM and operation'''
@@ -119,7 +130,7 @@ class VMTranslator:
         asm_string += "\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         asm_string += "\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         asm_string += f"\n@SP\nD=M\n@{n_args}\nD=D-A\n@5\nD=D-A\n@ARG\nM=D"
-        asm_string += f"\n@SP\nD=M\n@LCL\nM=D"
+        asm_string += "\n@SP\nD=M\n@LCL\nM=D"
         asm_string += f"\n@FUNCTION_{function_name}\n0;JMP"
         asm_string += f"\n(RETURN_FUNCTION_{function_name})"
 
@@ -138,49 +149,50 @@ class VMTranslator:
         asm_string += "\n@14\nA=M\n0;JMP"
         return asm_string
 
+
 # A quick-and-dirty parser when run as a standalone script.
 if __name__ == "__main__":
     import sys
-    if(len(sys.argv) > 1):
+    if (len(sys.argv) > 1):
         with open(sys.argv[1], "r") as a_file:
             for line in a_file:
                 tokens = line.strip().lower().split()
-                if(len(tokens)==1):
-                    if(tokens[0]=='add'):
+                if (len(tokens) == 1):
+                    if (tokens[0] == 'add'):
                         print(VMTranslator.vm_add())
-                    elif(tokens[0]=='sub'):
+                    elif (tokens[0] == 'sub'):
                         print(VMTranslator.vm_sub())
-                    elif(tokens[0]=='neg'):
+                    elif (tokens[0] == 'neg'):
                         print(VMTranslator.vm_neg())
-                    elif(tokens[0]=='eq'):
+                    elif (tokens[0] == 'eq'):
                         print(VMTranslator.vm_eq())
-                    elif(tokens[0]=='gt'):
+                    elif (tokens[0] == 'gt'):
                         print(VMTranslator.vm_gt())
-                    elif(tokens[0]=='lt'):
+                    elif (tokens[0] == 'lt'):
                         print(VMTranslator.vm_lt())
-                    elif(tokens[0]=='and'):
+                    elif (tokens[0] == 'and'):
                         print(VMTranslator.vm_and())
-                    elif(tokens[0]=='or'):
+                    elif (tokens[0] == 'or'):
                         print(VMTranslator.vm_or())
-                    elif(tokens[0]=='not'):
+                    elif (tokens[0] == 'not'):
                         print(VMTranslator.vm_not())
-                    elif(tokens[0]=='return'):
+                    elif (tokens[0] == 'return'):
                         print(VMTranslator.vm_return())
-                elif(len(tokens)==2):
-                    if(tokens[0]=='label'):
+                elif (len(tokens) == 2):
+                    if (tokens[0] == 'label'):
                         print(VMTranslator.vm_label(tokens[1]))
-                    elif(tokens[0]=='goto'):
+                    elif (tokens[0] == 'goto'):
                         print(VMTranslator.vm_goto(tokens[1]))
-                    elif(tokens[0]=='if-goto'):
+                    elif (tokens[0] == 'if-goto'):
                         print(VMTranslator.vm_if(tokens[1]))
-                elif(len(tokens)==3):
-                    if(tokens[0]=='push'):
-                        print(VMTranslator.vm_push(tokens[1],int(tokens[2])))
-                    elif(tokens[0]=='pop'):
-                        print(VMTranslator.vm_pop(tokens[1],int(tokens[2])))
-                    elif(tokens[0]=='function'):
-                        print(VMTranslator.vm_function(tokens[1],int(tokens[2])))
-                    elif(tokens[0]=='call'):
-                        print(VMTranslator.vm_call(tokens[1],int(tokens[2])))
+                elif (len(tokens) == 3):
+                    if (tokens[0] == 'push'):
+                        print(VMTranslator.vm_push(tokens[1], int(tokens[2])))
+                    elif (tokens[0] == 'pop'):
+                        print(VMTranslator.vm_pop(tokens[1], int(tokens[2])))
+                    elif (tokens[0] == 'function'):
+                        print(VMTranslator.vm_function(tokens[1], int(tokens[2])))
+                    elif (tokens[0] == 'call'):
+                        print(VMTranslator.vm_call(tokens[1], int(tokens[2])))
 
         
