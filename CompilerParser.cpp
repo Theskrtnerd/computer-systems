@@ -1,12 +1,12 @@
 #include "CompilerParser.h"
 #include <iostream>
 
-
 /**
  * Constructor for the CompilerParser
  * @param tokens A linked list of tokens to be parsed
  */
-CompilerParser::CompilerParser(std::list<Token*> _tokens) {
+CompilerParser::CompilerParser(std::list<Token *> _tokens)
+{
     tokens = _tokens;
 }
 
@@ -14,14 +14,17 @@ CompilerParser::CompilerParser(std::list<Token*> _tokens) {
  * Generates a parse tree for a single program
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileProgram() {
-    ParseTree* p_tree = new ParseTree("class", "");
-    p_tree->addChild(mustBe("keyword", "class")); // "class"
+ParseTree *CompilerParser::compileProgram()
+{
+    ParseTree *p_tree = new ParseTree("class", "");
+    p_tree->addChild(mustBe("keyword", "class"));   // "class"
     p_tree->addChild(mustBe("identifier", "Main")); // className (which is Main)
-    p_tree->addChild(mustBe("symbol", "{")); // "{"
-    while(have("", "", "classVarDec")) p_tree->addChild(compileClassVarDec()); // classVarDec*
-    while(have("", "", "subroutine")) p_tree->addChild(compileSubroutine()); // subroutineDec*
-    p_tree->addChild(mustBe("symbol", "}")); // "}"
+    p_tree->addChild(mustBe("symbol", "{"));        // "{"
+    while (have("", "", "classVarDec"))
+        p_tree->addChild(compileClassVarDec()); // classVarDec*
+    while (have("", "", "subroutine"))
+        p_tree->addChild(compileSubroutine()); // subroutineDec*
+    p_tree->addChild(mustBe("symbol", "}"));   // "}"
     return p_tree;
 }
 
@@ -29,14 +32,17 @@ ParseTree* CompilerParser::compileProgram() {
  * Generates a parse tree for a single class
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileClass() {
-    ParseTree* p_tree = new ParseTree("class", "");
+ParseTree *CompilerParser::compileClass()
+{
+    ParseTree *p_tree = new ParseTree("class", "");
     p_tree->addChild(mustBe("keyword", "class")); // "class"
-    p_tree->addChild(mustBe("identifier", "")); // className
-    p_tree->addChild(mustBe("symbol", "{")); // "{"
-    while(have("", "", "classVarDec")) p_tree->addChild(compileClassVarDec()); // classVarDec*
-    while(have("", "", "subroutine")) p_tree->addChild(compileSubroutine()); // subroutineDec*
-    p_tree->addChild(mustBe("symbol", "}")); // "}"
+    p_tree->addChild(mustBe("identifier", ""));   // className
+    p_tree->addChild(mustBe("symbol", "{"));      // "{"
+    while (have("", "", "classVarDec"))
+        p_tree->addChild(compileClassVarDec()); // classVarDec*
+    while (have("", "", "subroutine"))
+        p_tree->addChild(compileSubroutine()); // subroutineDec*
+    p_tree->addChild(mustBe("symbol", "}"));   // "}"
     return p_tree;
 }
 
@@ -44,12 +50,14 @@ ParseTree* CompilerParser::compileClass() {
  * Generates a parse tree for a static variable declaration or field declaration
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileClassVarDec() {
-    ParseTree* p_tree = new ParseTree("classVarDec", "");
+ParseTree *CompilerParser::compileClassVarDec()
+{
+    ParseTree *p_tree = new ParseTree("classVarDec", "");
     p_tree->addChild(mustBe("", "", "classVarDec")); // ("static" | "field")
-    p_tree->addChild(mustBe("", "", "type")); // type
-    p_tree->addChild(mustBe("identifier", "")); // varName
-    while(have("symbol", ",")) {
+    p_tree->addChild(mustBe("", "", "type"));        // type
+    p_tree->addChild(mustBe("identifier", ""));      // varName
+    while (have("symbol", ","))
+    {
         p_tree->addChild(mustBe("symbol", ","));
         p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
@@ -61,18 +69,23 @@ ParseTree* CompilerParser::compileClassVarDec() {
  * Generates a parse tree for a method, function, or constructor
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileSubroutine() {
-    ParseTree* p_tree = new ParseTree("subroutine", "");
+ParseTree *CompilerParser::compileSubroutine()
+{
+    ParseTree *p_tree = new ParseTree("subroutine", "");
     p_tree->addChild(mustBe("", "", "subroutine")); // ("constructor" | "function" | "method")
-    if(have("keyword", "void") || have("", "", "type")) {
+    if (have("keyword", "void") || have("", "", "type"))
+    {
         p_tree->addChild(current());
         next();
-    } else throw ParseException(); // ("void" | "type")
+    }
+    else
+        throw ParseException();                 // ("void" | "type")
     p_tree->addChild(mustBe("identifier", "")); // subroutineName
-    p_tree->addChild(mustBe("symbol", "(")); // "("
-    if(have("", "", "type")) p_tree->addChild(compileParameterList()); // parameterList
-    p_tree->addChild(mustBe("symbol", ")")); // ")"
-    p_tree->addChild(compileSubroutineBody()); // subroutineBody
+    p_tree->addChild(mustBe("symbol", "("));    // "("
+    if (have("", "", "type"))
+        p_tree->addChild(compileParameterList()); // parameterList
+    p_tree->addChild(mustBe("symbol", ")"));      // ")"
+    p_tree->addChild(compileSubroutineBody());    // subroutineBody
     return p_tree;
 }
 
@@ -80,16 +93,19 @@ ParseTree* CompilerParser::compileSubroutine() {
  * Generates a parse tree for a subroutine's parameters
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileParameterList() {
-    ParseTree* p_tree = new ParseTree("parameterList", "");
-    if(!current()) return p_tree;
-    p_tree->addChild(mustBe("", "", "type")); // type
+ParseTree *CompilerParser::compileParameterList()
+{
+    ParseTree *p_tree = new ParseTree("parameterList", "");
+    if (!current())
+        return p_tree;
+    p_tree->addChild(mustBe("", "", "type"));   // type
     p_tree->addChild(mustBe("identifier", "")); // varName
-    while(current() && have("symbol", ",")) {
+    while (current() && have("symbol", ","))
+    {
         p_tree->addChild(mustBe("symbol", ","));
         p_tree->addChild(mustBe("", "", "type"));
         p_tree->addChild(mustBe("identifier", ""));
-    } // ("," varName)*
+    } // ("," type varName)*
     return p_tree;
 }
 
@@ -97,12 +113,14 @@ ParseTree* CompilerParser::compileParameterList() {
  * Generates a parse tree for a subroutine's body
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileSubroutineBody() {
-    ParseTree* p_tree = new ParseTree("subroutineBody", "subroutineBody");
-    Token* token = mustBe("symbol", "{");
+ParseTree *CompilerParser::compileSubroutineBody()
+{
+    ParseTree *p_tree = new ParseTree("subroutineBody", "");
+    Token *token = mustBe("symbol", "{");
     p_tree->addChild(token);
-    if(have("keyword", "var")) p_tree->addChild(compileVarDec());
-    if(have("keyword", "let")) p_tree->addChild(compileStatements());
+    while (have("", "", "varDec"))
+        p_tree->addChild(compileVarDec());
+    p_tree->addChild(compileStatements());
     token = mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
@@ -112,15 +130,27 @@ ParseTree* CompilerParser::compileSubroutineBody() {
  * Generates a parse tree for a subroutine variable declaration
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileVarDec() {
-    return NULL;
+ParseTree *CompilerParser::compileVarDec()
+{
+    ParseTree *p_tree = new ParseTree("varDec", "");
+    p_tree->addChild(mustBe("keyword", "var")); // "var"
+    p_tree->addChild(mustBe("", "", "type")); // type
+    p_tree->addChild(mustBe("identifider", "")); // varName
+    while (have("symbol", ","))
+    {
+        p_tree->addChild(mustBe("symbol", ","));
+        p_tree->addChild(mustBe("identifier", ""));
+    } // ("," varName)*
+    p_tree->addChild(mustBe("symbol", ";")); // ";"
+    return p_tree;
 }
 
 /**
  * Generates a parse tree for a series of statements
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileStatements() {
+ParseTree *CompilerParser::compileStatements()
+{
     return NULL;
 }
 
@@ -128,7 +158,8 @@ ParseTree* CompilerParser::compileStatements() {
  * Generates a parse tree for a let statement
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileLet() {
+ParseTree *CompilerParser::compileLet()
+{
     return NULL;
 }
 
@@ -136,7 +167,8 @@ ParseTree* CompilerParser::compileLet() {
  * Generates a parse tree for an if statement
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileIf() {
+ParseTree *CompilerParser::compileIf()
+{
     return NULL;
 }
 
@@ -144,8 +176,9 @@ ParseTree* CompilerParser::compileIf() {
  * Generates a parse tree for a while statement
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileWhile() {
-    ParseTree* ptree = new ParseTree("keyword", "while");
+ParseTree *CompilerParser::compileWhile()
+{
+    ParseTree *ptree = new ParseTree("keyword", "while");
     return NULL;
 }
 
@@ -153,7 +186,8 @@ ParseTree* CompilerParser::compileWhile() {
  * Generates a parse tree for a do statement
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileDo() {
+ParseTree *CompilerParser::compileDo()
+{
     return NULL;
 }
 
@@ -161,7 +195,8 @@ ParseTree* CompilerParser::compileDo() {
  * Generates a parse tree for a return statement
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileReturn() {
+ParseTree *CompilerParser::compileReturn()
+{
     return NULL;
 }
 
@@ -169,7 +204,8 @@ ParseTree* CompilerParser::compileReturn() {
  * Generates a parse tree for an expression
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileExpression() {
+ParseTree *CompilerParser::compileExpression()
+{
     return NULL;
 }
 
@@ -177,7 +213,8 @@ ParseTree* CompilerParser::compileExpression() {
  * Generates a parse tree for an expression term
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileTerm() {
+ParseTree *CompilerParser::compileTerm()
+{
     return NULL;
 }
 
@@ -185,15 +222,18 @@ ParseTree* CompilerParser::compileTerm() {
  * Generates a parse tree for an expression list
  * @return a ParseTree
  */
-ParseTree* CompilerParser::compileExpressionList() {
+ParseTree *CompilerParser::compileExpressionList()
+{
     return NULL;
 }
 
 /**
  * Advance to the next token
  */
-void CompilerParser::next(){
-    if(!tokens.empty()){
+void CompilerParser::next()
+{
+    if (!tokens.empty())
+    {
         tokens.pop_front();
     }
     return;
@@ -203,7 +243,8 @@ void CompilerParser::next(){
  * Return the current token
  * @return the Token
  */
-Token* CompilerParser::current(){
+Token *CompilerParser::current()
+{
     return tokens.front();
 }
 
@@ -211,12 +252,19 @@ Token* CompilerParser::current(){
  * Check if the current token matches the expected type and value.
  * @return true if a match, false otherwise
  */
-bool CompilerParser::have(std::string expectedType, std::string expectedValue, std::string checkType){
-    Token* token = current();
-    if(checkType == "") return (token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue));
-    if(checkType == "type") return (have("identifier", "") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean"));
-    if(checkType == "classVarDec") return (have("keyword", "static") || have("keyword", "field"));
-    if(checkType == "subroutine") return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
+bool CompilerParser::have(std::string expectedType, std::string expectedValue, std::string checkType)
+{
+    Token *token = current();
+    if (checkType == "")
+        return (token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue));
+    if (checkType == "type")
+        return (have("identifier", "") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean"));
+    if (checkType == "classVarDec")
+        return (have("keyword", "static") || have("keyword", "field"));
+    if (checkType == "subroutine")
+        return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
+    if (checkType == "varDec")
+        return (have("keyword", "var");
     return false;
 }
 
@@ -225,9 +273,11 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue, s
  * If so, advance to the next token, returning the current token, otherwise throw a ParseException.
  * @return the current token before advancing
  */
-Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue, std::string checkType){
-    if(have(expectedType, expectedValue, checkType)) {
-        Token* curr = current();
+Token *CompilerParser::mustBe(std::string expectedType, std::string expectedValue, std::string checkType)
+{
+    if (have(expectedType, expectedValue, checkType))
+    {
+        Token *curr = current();
         next();
         return curr;
     }
@@ -239,6 +289,7 @@ Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValu
  * Definition of a ParseException
  * You can use this ParseException with `throw ParseException();`
  */
-const char* ParseException::what() {
+const char *ParseException::what()
+{
     return "An Exception occurred while parsing!";
 }
