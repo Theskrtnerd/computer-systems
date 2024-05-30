@@ -151,7 +151,7 @@ ParseTree *CompilerParser::compileLet() {
         p_tree->addChild(this->compileExpression());
         p_tree->addChild(mustBe("symbol", "]"));
     }
-    p_tree->addChild(mustBe("=", "symbol"));
+    p_tree->addChild(mustBe("symbol", "="));
     p_tree->addChild(this->compileExpression());
     p_tree->addChild(mustBe("symbol", ";"));
     return p_tree;
@@ -225,6 +225,10 @@ ParseTree *CompilerParser::compileReturn() {
  */
 ParseTree *CompilerParser::compileExpression() {
     ParseTree *p_tree = new ParseTree("expression", "");
+    if(have("keyword","skip")) {
+        p_tree->addChild(mustBe("keyword","skip"));
+        return p_tree;
+    }
     return p_tree;
 }
 
