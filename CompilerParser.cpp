@@ -32,6 +32,7 @@ ParseTree* CompilerParser::compileProgram() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClass() {
+    /*
     ParseTree* p_tree = new ParseTree("class", "class");
     Token* token = this->mustBe("keyword", "class");
     p_tree->addChild(token);
@@ -44,6 +45,8 @@ ParseTree* CompilerParser::compileClass() {
     token = this->mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
+    */
+    return NULL;
 }
 
 /**
@@ -62,7 +65,6 @@ ParseTree* CompilerParser::compileClassVarDec() {
     token = this->mustBe("symbol", ";");
     p_tree->addChild(token);
     return p_tree;
-    return NULL;
 }
 
 /**
