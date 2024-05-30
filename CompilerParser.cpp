@@ -15,12 +15,12 @@ CompilerParser::CompilerParser(std::list<Token*> _tokens) {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileProgram() {
-    ParseTree* p_tree = new ParseTree("class", "class");
+    ParseTree* p_tree = new ParseTree("class", "");
     p_tree->addChild(mustBe("keyword", "class")); // "class"
     p_tree->addChild(mustBe("identifier", "Main")); // className (which is Main)
     p_tree->addChild(mustBe("symbol", "{")); // "{"
-    while(have("keyword", "static") || have("keyword", "field")) p_tree->addChild(compileClassVarDec()); // classVarDec*
-    while(have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method")) p_tree->addChild(compileSubroutine()); // subroutineDec*
+    while(have("", "", "classVarDec")) p_tree->addChild(compileClassVarDec()); // classVarDec*
+    while(have("", "", "subroutine")) p_tree->addChild(compileSubroutine()); // subroutineDec*
     p_tree->addChild(mustBe("symbol", "}")); // "}"
     return p_tree;
 }
@@ -30,12 +30,12 @@ ParseTree* CompilerParser::compileProgram() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClass() {
-    ParseTree* p_tree = new ParseTree("class", "class");
+    ParseTree* p_tree = new ParseTree("class", "");
     p_tree->addChild(mustBe("keyword", "class")); // "class"
-    p_tree->addChild(mustBe("identifier")); // className
+    p_tree->addChild(mustBe("identifier", "")); // className
     p_tree->addChild(mustBe("symbol", "{")); // "{"
-    while(have("keyword", "static") || have("keyword", "field")) p_tree->addChild(compileClassVarDec()); // classVarDec*
-    while(have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method")) p_tree->addChild(compileSubroutine()); // subroutineDec*
+    while(have("", "", "classVarDec")) p_tree->addChild(compileClassVarDec()); // classVarDec*
+    while(have("", "", "subroutine")) p_tree->addChild(compileSubroutine()); // subroutineDec*
     p_tree->addChild(mustBe("symbol", "}")); // "}"
     return p_tree;
 }
@@ -45,19 +45,13 @@ ParseTree* CompilerParser::compileClass() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClassVarDec() {
-    ParseTree* p_tree = new ParseTree("classVarDec", "classVarDec");
-    if(have("keyword", "static") || have("keyword", "field")){
-        p_tree->addChild(current());
-        next();
-    }; // ("static" | "field")
-    if(have("identifier") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean")){
-        p_tree->addChild(current());
-        next();
-    }; // type
-    p_tree->addChild(mustBe("identifier")); // varName
+    ParseTree* p_tree = new ParseTree("classVarDec", "");
+    p_tree->addChild(mustBe("", "", "classVarDec")); // ("static" | "field")
+    p_tree->addChild(mustBe("", "", "type")); // type
+    p_tree->addChild(mustBe("identifier", "")); // varName
     while(have("symbol", ",")) {
         p_tree->addChild(mustBe("symbol", ","));
-        p_tree->addChild(mustBe("identifier"));
+        p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
     p_tree->addChild(mustBe("symbol", ";")); // ";"
     return p_tree;
@@ -68,18 +62,15 @@ ParseTree* CompilerParser::compileClassVarDec() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileSubroutine() {
-    ParseTree* p_tree = new ParseTree("subroutine", "subroutine");
-    if(have("keyword", "constructor") || have("keyword", "function") || have("keyword", "method")) {
+    ParseTree* p_tree = new ParseTree("subroutine", "");
+    p_tree->addChild(mustBe("", "", "subroutine")); // ("constructor" | "function" | "method")
+    if(have("keyword", "void") || have("", "", "type")) {
         p_tree->addChild(current());
         next();
-    } // ("constructor" | "function" | "method")
-    if(have("keyword", "void") || have("identifier") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean")) {
-        p_tree->addChild(current());
-        next();
-    } // ("void" | "type")
-    p_tree->addChild(mustBe("identifier")); // subroutineName
+    } else throw ParseException(); // ("void" | "type")
+    p_tree->addChild(mustBe("identifier", "")); // subroutineName
     p_tree->addChild(mustBe("symbol", "(")); // "("
-    if(have("identifier") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean")) p_tree->addChild(compileParameterList()); // parameterList
+    if(have("", "", "type")) p_tree->addChild(compileParameterList()); // parameterList
     p_tree->addChild(mustBe("symbol", ")")); // ")"
     p_tree->addChild(compileSubroutineBody()); // subroutineBody
     return p_tree;
@@ -211,11 +202,12 @@ Token* CompilerParser::current(){
  * Check if the current token matches the expected type and value.
  * @return true if a match, false otherwise
  */
-bool CompilerParser::have(std::string expectedType, std::string expectedValue){
+bool CompilerParser::have(std::string expectedType, std::string expectedValue, std::string checkType){
     Token* token = current();
-    if(token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue)) {
-        return true;
-    }
+    if(checkType == "") return (token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue));
+    if(checkType == "type") return (have("identifier", "") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean"));
+    if(checkType == "classVarDec") return (have("keyword", "static") || have("keyword", "field"));
+    if(checkType == "subroutine") return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
     return false;
 }
 
@@ -224,8 +216,8 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue){
  * If so, advance to the next token, returning the current token, otherwise throw a ParseException.
  * @return the current token before advancing
  */
-Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue){
-    if(have(expectedType, expectedValue)) {
+Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue, std::string checkType){
+    if(have(expectedType, expectedValue, checkType)) {
         Token* curr = current();
         next();
         return curr;
