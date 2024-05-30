@@ -60,8 +60,7 @@ ParseTree *CompilerParser::compileClassVarDec() {
  * Generates a parse tree for a method, function, or constructor
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileSubroutine()
-{
+ParseTree *CompilerParser::compileSubroutine() {
     ParseTree *p_tree = new ParseTree("subroutine", "");
     p_tree->addChild(mustBe("", "", "subroutine")); // ("constructor" | "function" | "method")
     if (have("keyword", "void") || have("", "", "type")) {
@@ -80,8 +79,7 @@ ParseTree *CompilerParser::compileSubroutine()
  * Generates a parse tree for a subroutine's parameters
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileParameterList()
-{
+ParseTree *CompilerParser::compileParameterList() {
     ParseTree *p_tree = new ParseTree("parameterList", "");
     if (!current()) return p_tree;              // check?
     p_tree->addChild(mustBe("", "", "type"));   // type
@@ -98,8 +96,7 @@ ParseTree *CompilerParser::compileParameterList()
  * Generates a parse tree for a subroutine's body
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileSubroutineBody()
-{
+ParseTree *CompilerParser::compileSubroutineBody() {
     ParseTree *p_tree = new ParseTree("subroutineBody", "");
     p_tree->addChild( mustBe("symbol", "{")); // "{"
     while (have("", "", "varDec")) p_tree->addChild(compileVarDec()); // varDec*
@@ -112,8 +109,7 @@ ParseTree *CompilerParser::compileSubroutineBody()
  * Generates a parse tree for a subroutine variable declaration
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileVarDec()
-{
+ParseTree *CompilerParser::compileVarDec() {
     ParseTree *p_tree = new ParseTree("varDec", "");
     p_tree->addChild(mustBe("keyword", "var")); // "var"
     p_tree->addChild(mustBe("", "", "type")); // type
@@ -131,8 +127,7 @@ ParseTree *CompilerParser::compileVarDec()
  * Generates a parse tree for a series of statements
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileStatements()
-{
+ParseTree *CompilerParser::compileStatements() {
     return NULL;
 }
 
@@ -140,8 +135,7 @@ ParseTree *CompilerParser::compileStatements()
  * Generates a parse tree for a let statement
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileLet()
-{
+ParseTree *CompilerParser::compileLet() {
     return NULL;
 }
 
@@ -149,8 +143,7 @@ ParseTree *CompilerParser::compileLet()
  * Generates a parse tree for an if statement
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileIf()
-{
+ParseTree *CompilerParser::compileIf() {
     return NULL;
 }
 
@@ -158,8 +151,7 @@ ParseTree *CompilerParser::compileIf()
  * Generates a parse tree for a while statement
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileWhile()
-{
+ParseTree *CompilerParser::compileWhile() {
     ParseTree *ptree = new ParseTree("keyword", "while");
     return NULL;
 }
@@ -168,8 +160,7 @@ ParseTree *CompilerParser::compileWhile()
  * Generates a parse tree for a do statement
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileDo()
-{
+ParseTree *CompilerParser::compileDo() {
     return NULL;
 }
 
@@ -177,8 +168,7 @@ ParseTree *CompilerParser::compileDo()
  * Generates a parse tree for a return statement
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileReturn()
-{
+ParseTree *CompilerParser::compileReturn() {
     return NULL;
 }
 
@@ -186,8 +176,7 @@ ParseTree *CompilerParser::compileReturn()
  * Generates a parse tree for an expression
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileExpression()
-{
+ParseTree *CompilerParser::compileExpression() {
     return NULL;
 }
 
@@ -195,8 +184,7 @@ ParseTree *CompilerParser::compileExpression()
  * Generates a parse tree for an expression term
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileTerm()
-{
+ParseTree *CompilerParser::compileTerm() {
     return NULL;
 }
 
@@ -204,20 +192,15 @@ ParseTree *CompilerParser::compileTerm()
  * Generates a parse tree for an expression list
  * @return a ParseTree
  */
-ParseTree *CompilerParser::compileExpressionList()
-{
+ParseTree *CompilerParser::compileExpressionList() {
     return NULL;
 }
 
 /**
  * Advance to the next token
  */
-void CompilerParser::next()
-{
-    if (!tokens.empty())
-    {
-        tokens.pop_front();
-    }
+void CompilerParser::next() {
+    if (!tokens.empty()) tokens.pop_front();
     return;
 }
 
@@ -225,8 +208,7 @@ void CompilerParser::next()
  * Return the current token
  * @return the Token
  */
-Token *CompilerParser::current()
-{
+Token *CompilerParser::current() {
     return tokens.front();
 }
 
@@ -234,19 +216,13 @@ Token *CompilerParser::current()
  * Check if the current token matches the expected type and value.
  * @return true if a match, false otherwise
  */
-bool CompilerParser::have(std::string expectedType, std::string expectedValue, std::string checkType)
-{
+bool CompilerParser::have(std::string expectedType, std::string expectedValue, std::string checkType) {
     Token *token = current();
-    if (checkType == "")
-        return (token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue));
-    if (checkType == "type")
-        return (have("identifier", "") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean"));
-    if (checkType == "classVarDec")
-        return (have("keyword", "static") || have("keyword", "field"));
-    if (checkType == "subroutine")
-        return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
-    if (checkType == "varDec")
-        return (have("keyword", "var"));
+    if (checkType == "") return (token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue));
+    if (checkType == "type") return (have("identifier", "") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean"));
+    if (checkType == "classVarDec") return (have("keyword", "static") || have("keyword", "field"));
+    if (checkType == "subroutine") return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
+    if (checkType == "varDec") return (have("keyword", "var"));
     return false;
 }
 
@@ -255,10 +231,8 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue, s
  * If so, advance to the next token, returning the current token, otherwise throw a ParseException.
  * @return the current token before advancing
  */
-Token *CompilerParser::mustBe(std::string expectedType, std::string expectedValue, std::string checkType)
-{
-    if (have(expectedType, expectedValue, checkType))
-    {
+Token *CompilerParser::mustBe(std::string expectedType, std::string expectedValue, std::string checkType) {
+    if (have(expectedType, expectedValue, checkType)) {
         Token *curr = current();
         next();
         return curr;
@@ -271,7 +245,6 @@ Token *CompilerParser::mustBe(std::string expectedType, std::string expectedValu
  * Definition of a ParseException
  * You can use this ParseException with `throw ParseException();`
  */
-const char *ParseException::what()
-{
+const char *ParseException::what() {
     return "An Exception occurred while parsing!";
 }
