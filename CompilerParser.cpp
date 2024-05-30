@@ -13,16 +13,12 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileProgram() {
-    Token* token = this->current();
-    if(token->getType() != "class") throw ParseException();
-    this->next();
-    Token* keyw = this->current();
-    this->next();
-    Token* iden = this->current();
-    this->next();
-    Token* symb = this->current();
-    this->next();
-    return token;
+    ParseTree* p_tree = this->mustBe("class", "Main");
+    Token* token = this->mustBe("keyword", "class");
+    token = this->mustBe("identifier", "Main");
+    token = this->mustBe("symbol", "{");
+    token = this->mustBe("symbol", "}");
+    return p_tree
 }
 
 /**
