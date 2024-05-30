@@ -245,6 +245,7 @@ ParseTree *CompilerParser::compileTerm() {
     ParseTree *p_tree = new ParseTree("term", "");
     if(have("integerConstant", "") || have("stringConstant", "") || have("", "", "keywordConstant")){
         p_tree->addChild(current());
+        next();
         return p_tree;
     }
     else if (have("identifier", "")) {

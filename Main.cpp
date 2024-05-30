@@ -13,17 +13,26 @@ int main(int argc, char *argv[]) {
      *     }
      */
     list<Token*> tokens;
-    tokens.push_back(new Token("symbol", "{"));
-    tokens.push_back(new Token("keyword", "let"));
+    tokens.push_back(new Token("symbol", "("));
+    tokens.push_back(new Token("symbol", "("));
     tokens.push_back(new Token("identifier", "a"));
+    tokens.push_back(new Token("symbol", "+"));
+    tokens.push_back(new Token("symbol", "("));
+    tokens.push_back(new Token("integerConstant", "1"));
+    tokens.push_back(new Token("symbol", "-"));
+    tokens.push_back(new Token("identifier", "c"));
+    tokens.push_back(new Token("symbol", ")"));
+    tokens.push_back(new Token("symbol", ")"));
+    tokens.push_back(new Token("symbol", ">"));
+    tokens.push_back(new Token("integerConstant", "5"));
+    tokens.push_back(new Token("symbol", ")"));
     tokens.push_back(new Token("symbol", "="));
-    tokens.push_back(new Token("keyword", "skip"));
-    tokens.push_back(new Token("symbol", ";"));
-    tokens.push_back(new Token("symbol", "}"));
+    tokens.push_back(new Token("keyword", "true"));
+
 
     try {
         CompilerParser parser(tokens);
-        ParseTree* result = parser.compileSubroutineBody();
+        ParseTree* result = parser.compileExpression();
         if (result != NULL){
             cout << result->tostring() << endl;
         }
