@@ -16,14 +16,12 @@ CompilerParser::CompilerParser(std::list<Token*> _tokens) {
  */
 ParseTree* CompilerParser::compileProgram() {
     ParseTree* p_tree = new ParseTree("class", "class");
-    Token* token = mustBe("keyword", "class");
-    p_tree->addChild(token);
-    token = mustBe("identifier", "Main");
-    p_tree->addChild(token);
-    token = mustBe("symbol", "{");
-    p_tree->addChild(token);
-    token = mustBe("symbol", "}");
-    p_tree->addChild(token);
+    p_tree->addChild(mustBe("keyword", "class")); // "class"
+    p_tree->addChild(mustBe("identifier", "Main")); // className (which is Main)
+    p_tree->addChild(mustBe("symbol", "{")); // "{"
+    while(have("keyword", "static") || have("keyword", "field")) p_tree->addChild(compileClassVarDec()); // classVarDec*
+    while(have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method")) p_tree->addChild(compileSubroutine()); // subroutineDec*
+    p_tree->addChild(mustBe("symbol", "}")); // "}"
     return p_tree;
 }
 
@@ -33,16 +31,12 @@ ParseTree* CompilerParser::compileProgram() {
  */
 ParseTree* CompilerParser::compileClass() {
     ParseTree* p_tree = new ParseTree("class", "class");
-    Token* token = mustBe("keyword", "class");
-    p_tree->addChild(token);
-    token = mustBe("identifier");
-    p_tree->addChild(token);
-    token = mustBe("symbol", "{");
-    p_tree->addChild(token);
-    while(have("keyword", "static") || have("keyword", "field")) p_tree->addChild(compileClassVarDec());
-    while(have("keyword", "function")) p_tree->addChild(compileSubroutine());
-    token = mustBe("symbol", "}");
-    p_tree->addChild(token);
+    p_tree->addChild(mustBe("keyword", "class")); // "class"
+    p_tree->addChild(mustBe("identifier")); // className
+    p_tree->addChild(mustBe("symbol", "{")); // "{"
+    while(have("keyword", "static") || have("keyword", "field")) p_tree->addChild(compileClassVarDec()); // classVarDec*
+    while(have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method")) p_tree->addChild(compileSubroutine()); // subroutineDec*
+    p_tree->addChild(mustBe("symbol", "}")); // "}"
     return p_tree;
 }
 
@@ -55,19 +49,19 @@ ParseTree* CompilerParser::compileClassVarDec() {
     if(have("keyword", "static") || have("keyword", "field")){
         p_tree->addChild(current());
         next();
-    };
-    Token* token = mustBe("keyword");
-    p_tree->addChild(token);
-    token = mustBe("identifier");
-    p_tree->addChild(token);
+    }; // ("static" | "field")
+    if(have("identifier") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean")){
+        p_tree->addChild(current());
+        next();
+    }; // type
+    p_tree->addChild(mustBe("identifier")); // varName
     while(have("symbol", ",")) {
-        token = mustBe("symbol", ",");
+        Token* token = mustBe("symbol", ",");
         p_tree->addChild(token);
-        token = mustBe("identifier");
+        Token* token = mustBe("identifier");
         p_tree->addChild(token);
-    }
-    token = mustBe("symbol", ";");
-    p_tree->addChild(token);
+    } // ("," varName)*
+    p_tree->addChild(mustBe("symbol", ";")); // ";"
     return p_tree;
 }
 
@@ -80,18 +74,16 @@ ParseTree* CompilerParser::compileSubroutine() {
     if(have("keyword", "constructor") || have("keyword", "function") || have("keyword", "method")) {
         p_tree->addChild(current());
         next();
-    }
-    Token* token = mustBe("keyword");
-    p_tree->addChild(token);
-    if(current()->getType() != "identifier") throw ParseException();
-    p_tree->addChild(current());
-    next();
-    token = mustBe("symbol", "(");
-    p_tree->addChild(token);
-    if(have("keyword", "int")) p_tree->addChild(compileParameterList());
-    token = mustBe("symbol", ")");
-    p_tree->addChild(token);
-    p_tree->addChild(compileSubroutineBody());
+    } // ("constructor" | "function" | "method")
+    if(have("keyword", "void") || have("identifier") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean")) {
+        p_tree->addChild(current());
+        next();
+    } // ("void" | "type")
+    p_tree->addChild(mustBe("identifier")); // subroutineName
+    p_tree->addChild(mustBe("symbol", "(")); // "("
+    if(have("identifier") || have("keyword", "int") || have("keyword", "char") || have("keyword", "boolean")) p_tree->addChild(compileParameterList()); // parameterList
+    p_tree->addChild(mustBe("symbol", ")")); // ")"
+    p_tree->addChild(compileSubroutineBody()); // subroutineBody
     return p_tree;
 }
 
