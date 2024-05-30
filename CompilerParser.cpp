@@ -6,6 +6,7 @@
  * @param tokens A linked list of tokens to be parsed
  */
 CompilerParser::CompilerParser(std::list<Token*> tokens) {
+    this->tokens = tokens;
 }
 
 /**
@@ -13,12 +14,16 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileProgram() {
-    ParseTree* p_tree = this->mustBe("class", "Main");
+    ParseTree* p_tree = new ParseTree("class", "class");
     Token* token = this->mustBe("keyword", "class");
+    p_tree->addChild(token);
     token = this->mustBe("identifier", "Main");
+    p_tree->addChild(token);
     token = this->mustBe("symbol", "{");
+    p_tree->addChild(token);
     token = this->mustBe("symbol", "}");
-    return p_tree
+    p_tree->addChild(token);
+    return p_tree;
 }
 
 /**
@@ -146,7 +151,9 @@ ParseTree* CompilerParser::compileExpressionList() {
  * Advance to the next token
  */
 void CompilerParser::next(){
-    this->tokens.pop_front();
+    if(!this->tokens.empty()){
+        this->tokens.pop_front();
+    }
     return;
 }
 
@@ -163,7 +170,7 @@ Token* CompilerParser::current(){
  * @return true if a match, false otherwise
  */
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){
-    Token* token = this->tokens.front();
+    Token* token = this->current();
     if(token->getType() == expectedType && token->getValue() == expectedValue) {
         return true;
     }
@@ -177,8 +184,9 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue){
  */
 Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue){
     if(this->have(expectedType, expectedValue)) {
+        Token* curr = this->current();
         this->next();
-        return this->current();
+        return curr;
     }
     throw ParseException();
 }
