@@ -128,7 +128,7 @@ ParseTree *CompilerParser::compileVarDec() {
  */
 ParseTree *CompilerParser::compileStatements() {
     ParseTree *p_tree = new ParseTree("statements", "");
-    while(have("","","statements")) {
+    while(current() && have("","","statements")) {
         if(have("keyword","let")) p_tree->addChild(this->compileLet());
         else if(have("keyword","if")) p_tree->addChild(this->compileIf());
         else if(have("keyword","while")) p_tree->addChild(this->compileWhile());
