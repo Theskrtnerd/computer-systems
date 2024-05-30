@@ -264,7 +264,7 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue, s
     if (checkType == "subroutine")
         return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
     if (checkType == "varDec")
-        return (have("keyword", "var");
+        return (have("keyword", "var"));
     return false;
 }
 
