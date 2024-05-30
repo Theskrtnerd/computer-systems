@@ -15,7 +15,14 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
 ParseTree* CompilerParser::compileProgram() {
     Token* token = this->current();
     if(token->getType() != "class") throw ParseException();
-    return NULL;
+    this->next();
+    Token* keyw = this->current();
+    this->next();
+    Token* iden = this->current();
+    this->next();
+    Token* symb = this->current();
+    this->next();
+    return token;
 }
 
 /**
@@ -143,6 +150,7 @@ ParseTree* CompilerParser::compileExpressionList() {
  * Advance to the next token
  */
 void CompilerParser::next(){
+    this->tokens.pop_front();
     return;
 }
 
@@ -151,7 +159,7 @@ void CompilerParser::next(){
  * @return the Token
  */
 Token* CompilerParser::current(){
-    return NULL;
+    return this->tokens.front();
 }
 
 /**
@@ -159,6 +167,10 @@ Token* CompilerParser::current(){
  * @return true if a match, false otherwise
  */
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){
+    Token* token = this->tokens.front();
+    if(token->getType() == expectedType && token->getValue() == expectedValue) {
+        return true;
+    }
     return false;
 }
 
@@ -168,7 +180,11 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue){
  * @return the current token before advancing
  */
 Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue){
-    return NULL;
+    if(this->have(expectedType, expectedValue)) {
+        this->next();
+        return this->current();
+    }
+    throw ParseException();
 }
 
 /**
