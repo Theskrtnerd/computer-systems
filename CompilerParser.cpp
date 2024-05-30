@@ -243,7 +243,7 @@ ParseTree *CompilerParser::compileExpression() {
  */
 ParseTree *CompilerParser::compileTerm() {
     ParseTree *p_tree = new ParseTree("term", "");
-    if(have("integerConstant", "") || have("stringConstant", "") || have("keywordConstant", "")){
+    if(have("integerConstant", "") || have("stringConstant", "") || have("", "", "keywordConstant")){
         p_tree->addChild(current());
         return p_tree;
     }
@@ -311,6 +311,7 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue, s
     if (checkType == "subroutine") return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
     if (checkType == "varDec") return (have("keyword", "var"));
     if (checkType == "statements") return (have("keyword", "let") || have("keyword", "if") || have("keyword", "while") || have("keyword", "do") || have("keyword", "return"));
+    if (checkType == "keywordConstant") return (have("keyword", "true") || have("keyword", "false") || have("keyword", "null") || have("keyword", "this"));
     if (checkType == "unaryOp") return (have("symbol", "-") || have("symbol", "~"));
     if (checkType == "op") return (have("symbol", "+") || have("symbol", "-") || have("symbol", "*") || have("symbol", "/") || have("symbol", "&") || have("symbol", "|") || have("symbol", "<") || have("symbol", ">") || have("symbol", "="));
     return false;
