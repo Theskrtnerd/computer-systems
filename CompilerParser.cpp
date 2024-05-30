@@ -224,7 +224,7 @@ ParseTree *CompilerParser::compileReturn() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileExpression() {
-    ParseTree *p_tree = new ParseTree("returnStatement", "");
+    ParseTree *p_tree = new ParseTree("expression", "");
     return p_tree;
 }
 
