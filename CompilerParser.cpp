@@ -39,8 +39,8 @@ ParseTree* CompilerParser::compileClass() {
     p_tree->addChild(token);
     token = this->mustBe("symbol", "{");
     p_tree->addChild(token);
-    ParseTree* classVarDec = this->compileClassVarDec();
-    p_tree->addChild(classVarDec);
+    // ParseTree* classVarDec = this->compileClassVarDec();
+    // p_tree->addChild(classVarDec);
     token = this->mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
@@ -51,6 +51,7 @@ ParseTree* CompilerParser::compileClass() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClassVarDec() {
+    /*
     ParseTree* p_tree = new ParseTree("classVarDec", "classVarDec");
     Token* token = this->mustBe("keyword", "static");
     p_tree->addChild(token);
@@ -61,6 +62,8 @@ ParseTree* CompilerParser::compileClassVarDec() {
     token = this->mustBe("symbol", ";");
     p_tree->addChild(token);
     return p_tree;
+    */
+    return NULL;
 }
 
 /**
