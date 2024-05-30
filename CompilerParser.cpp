@@ -60,6 +60,12 @@ ParseTree* CompilerParser::compileClassVarDec() {
     p_tree->addChild(token);
     token = mustBe("identifier");
     p_tree->addChild(token);
+    while(have("symbol", ",")) {
+        token = mustBe("symbol", ",");
+        p_tree->addChild(token);
+        token = mustBe("identifier");
+        p_tree->addChild(token);
+    }
     token = mustBe("symbol", ";");
     p_tree->addChild(token);
     return p_tree;
