@@ -113,9 +113,8 @@ ParseTree *CompilerParser::compileVarDec() {
     ParseTree *p_tree = new ParseTree("varDec", "");
     p_tree->addChild(mustBe("keyword", "var")); // "var"
     p_tree->addChild(mustBe("", "", "type")); // type
-    p_tree->addChild(mustBe("identifider", "")); // varName
-    while (have("symbol", ","))
-    {
+    p_tree->addChild(mustBe("identifier", "")); // varName
+    while (have("symbol", ",")) {
         p_tree->addChild(mustBe("symbol", ","));
         p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
@@ -237,7 +236,7 @@ Token *CompilerParser::mustBe(std::string expectedType, std::string expectedValu
         next();
         return curr;
     }
-    std::cout << expectedType << " " << expectedValue << "\n";
+    std::cout << current()->getType() << " " << current()->getValue() << " " << expectedType << " " << expectedValue << " " << checkType << "\n";
     throw ParseException();
 }
 
