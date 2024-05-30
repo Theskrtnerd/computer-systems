@@ -39,8 +39,8 @@ ParseTree* CompilerParser::compileClass() {
     p_tree->addChild(token);
     token = this->mustBe("symbol", "{");
     p_tree->addChild(token);
-    if(this->have("keyword", "static")) p_tree->addChild(this->compileClassVarDec());
-    if(this->have("keyword", "function")) p_tree->addChild(this->compileSubroutine());
+    while(this->have("keyword", "static")) p_tree->addChild(this->compileClassVarDec());
+    while(this->have("keyword", "function")) p_tree->addChild(this->compileSubroutine());
     token = this->mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
@@ -100,6 +100,7 @@ ParseTree* CompilerParser::compileParameterList() {
 ParseTree* CompilerParser::compileSubroutineBody() {
     ParseTree* p_tree = new ParseTree("subroutineBody", "subroutineBody");
     Token* token = this->mustBe("symbol", "{");
+    p_tree->addChild(token);
     if(this->have("keyword", "var")) p_tree->addChild(this->compileVarDec());
     if(this->have("keyword", "let")) p_tree->addChild(this->compileStatements());
     token = this->mustBe("symbol", "}");
