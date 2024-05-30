@@ -52,9 +52,11 @@ ParseTree* CompilerParser::compileClass() {
  */
 ParseTree* CompilerParser::compileClassVarDec() {
     ParseTree* p_tree = new ParseTree("classVarDec", "classVarDec");
+    if(this->have("keyword", "static") || this->have("keyword", "field")){
+        p_tree->addChild(this->current());
+        this->next();
+    };
     Token* token = this->mustBe("keyword");
-    p_tree->addChild(token);
-    token = this->mustBe("keyword");
     p_tree->addChild(token);
     token = this->mustBe("identifier");
     p_tree->addChild(token);
