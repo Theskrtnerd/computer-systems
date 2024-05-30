@@ -264,7 +264,7 @@ ParseTree *CompilerParser::compileTerm() {
         }
         else if(current() && have("symbol", ".")) {
             p_tree->addChild(mustBe("symbol", "."));
-            p_tree->addChild(mustBe("identifier", "("));
+            p_tree->addChild(mustBe("identifier", ""));
             p_tree->addChild(mustBe("symbol", "("));
             p_tree->addChild(compileExpressionList());
             p_tree->addChild(mustBe("symbol", ")"));
