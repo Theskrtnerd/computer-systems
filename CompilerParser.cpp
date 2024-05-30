@@ -127,7 +127,15 @@ ParseTree *CompilerParser::compileVarDec() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileStatements() {
-    return NULL;
+    ParseTree *p_tree = new ParseTree("statements", "");
+    while(have("","","statements")) {
+        if(have("keyword","let")) p_tree->addChild(this->compileLet());
+        else if(have("keyword","if")) p_tree->addChild(this->compileIf());
+        else if(have("keyword","while")) p_tree->addChild(this->compileWhile());
+        else if(have("keyword","do")) p_tree->addChild(this->compileDo());
+        else if(have("keyword","return")) p_tree->addChild(this->compileReturn());
+    }
+    return p_tree;
 }
 
 /**
@@ -135,7 +143,18 @@ ParseTree *CompilerParser::compileStatements() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileLet() {
-    return NULL;
+    ParseTree *p_tree = new ParseTree("letStatement", "");
+    p_tree->addChild(mustBe("keyword", "let"));
+    p_tree->addChild(mustBe("identifier", ""));
+    if(have("symbol", "[")) {
+        p_tree->addChild(mustBe("symbol", "["));
+        p_tree->addChild(this->compileExpression());
+        p_tree->addChild(mustBe("symbol", "]"));
+    }
+    p_tree->addChild(mustBe("=", "symbol"));
+    p_tree->addChild(this->compileExpression());
+    p_tree->addChild(mustBe("symbol", ";"));
+    return p_tree;
 }
 
 /**
@@ -143,7 +162,21 @@ ParseTree *CompilerParser::compileLet() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileIf() {
-    return NULL;
+    ParseTree *p_tree = new ParseTree("ifStatement", "");
+    p_tree->addChild(mustBe("keyword", "if"));
+    p_tree->addChild(mustBe("symbol", "("));
+    p_tree->addChild(this->compileExpression());
+    p_tree->addChild(mustBe("symbol", ")"));
+    p_tree->addChild(mustBe("symbol", "{"));
+    p_tree->addChild(this->compileStatements());
+    p_tree->addChild(mustBe("symbol", "}"));
+    if(have("keyword", "else")) {
+        p_tree->addChild(mustBe("keyword", "else"));
+        p_tree->addChild(mustBe("symbol", "{"));
+        p_tree->addChild(this->compileStatements());
+        p_tree->addChild(mustBe("symbol", "}"));
+    }
+    return p_tree;
 }
 
 /**
@@ -151,8 +184,15 @@ ParseTree *CompilerParser::compileIf() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileWhile() {
-    ParseTree *ptree = new ParseTree("keyword", "while");
-    return NULL;
+    ParseTree *p_tree = new ParseTree("whileStatement", "");
+    p_tree->addChild(mustBe("keyword", "while"));
+    p_tree->addChild(mustBe("symbol", "("));
+    p_tree->addChild(this->compileExpression());
+    p_tree->addChild(mustBe("symbol", ")"));
+    p_tree->addChild(mustBe("symbol", "{"));
+    p_tree->addChild(this->compileStatements());
+    p_tree->addChild(mustBe("symbol", "}"));
+    return p_tree;
 }
 
 /**
@@ -160,7 +200,11 @@ ParseTree *CompilerParser::compileWhile() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileDo() {
-    return NULL;
+    ParseTree *p_tree = new ParseTree("doStatement", "");
+    p_tree->addChild(mustBe("keyword", "do"));
+    p_tree->addChild(this->compileExpression());
+    p_tree->addChild(mustBe("symbol", ";"));
+    return p_tree;
 }
 
 /**
@@ -168,7 +212,11 @@ ParseTree *CompilerParser::compileDo() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileReturn() {
-    return NULL;
+    ParseTree *p_tree = new ParseTree("returnStatement", "");
+    p_tree->addChild(mustBe("keyword", "return"));
+    if(!have("symbol", ";")) p_tree->addChild(this->compileExpression());
+    p_tree->addChild(mustBe("symbol", ";"));
+    return p_tree;
 }
 
 /**
@@ -176,7 +224,8 @@ ParseTree *CompilerParser::compileReturn() {
  * @return a ParseTree
  */
 ParseTree *CompilerParser::compileExpression() {
-    return NULL;
+    ParseTree *p_tree = new ParseTree("returnStatement", "");
+    return p_tree;
 }
 
 /**
@@ -222,6 +271,7 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue, s
     if (checkType == "classVarDec") return (have("keyword", "static") || have("keyword", "field"));
     if (checkType == "subroutine") return (have("keyword", "function") || have("keyword", "constructor") || have("keyword", "method"));
     if (checkType == "varDec") return (have("keyword", "var"));
+    if (checkType == "statements") return (have("keyword", "let") || have("keyword", "if") || have("keyword", "while") || have("keyword", "do") || have("keyword", "return"));
     return false;
 }
 
