@@ -51,18 +51,17 @@ ParseTree* CompilerParser::compileClass() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClassVarDec() {
-    /*
     ParseTree* p_tree = new ParseTree("classVarDec", "classVarDec");
     Token* token = this->mustBe("keyword", "static");
     p_tree->addChild(token);
     token = this->mustBe("keyword", "int");
     p_tree->addChild(token);
-    token = this->mustBe("identifier", "a");
-    p_tree->addChild(token);
+    if(this->current()->getType() != "identifier") throw ParseException();
+    p_tree->addChild(this->current());
+    this->next();
     token = this->mustBe("symbol", ";");
     p_tree->addChild(token);
     return p_tree;
-    */
     return NULL;
 }
 
