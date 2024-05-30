@@ -170,7 +170,7 @@ ParseTree *CompilerParser::compileIf() {
     p_tree->addChild(mustBe("symbol", "{"));
     p_tree->addChild(this->compileStatements());
     p_tree->addChild(mustBe("symbol", "}"));
-    if(have("keyword", "else")) {
+    if(current() && have("keyword", "else")) {
         p_tree->addChild(mustBe("keyword", "else"));
         p_tree->addChild(mustBe("symbol", "{"));
         p_tree->addChild(this->compileStatements());
