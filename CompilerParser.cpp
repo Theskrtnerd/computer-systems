@@ -85,7 +85,7 @@ ParseTree* CompilerParser::compileParameterList() {
     if(!current()) return p_tree;
     p_tree->addChild(mustBe("", "", "type")); // type
     p_tree->addChild(mustBe("identifier", "")); // varName
-    while(have("symbol", ",")) {
+    while(current() && have("symbol", ",")) {
         p_tree->addChild(mustBe("symbol", ","));
         p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
