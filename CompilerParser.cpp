@@ -77,9 +77,11 @@ ParseTree* CompilerParser::compileClassVarDec() {
  */
 ParseTree* CompilerParser::compileSubroutine() {
     ParseTree* p_tree = new ParseTree("subroutine", "subroutine");
-    Token* token = mustBe("keyword", "function");
-    p_tree->addChild(token);
-    token = mustBe("keyword", "void");
+    if(have("keyword", "constructor") || have("keyword", "function") || have("keyword", "method")) {
+        p_tree->addChild(current());
+        next();
+    }
+    Token* token = mustBe("keyword");
     p_tree->addChild(token);
     if(current()->getType() != "identifier") throw ParseException();
     p_tree->addChild(current());
