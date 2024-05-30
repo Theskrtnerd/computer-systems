@@ -254,6 +254,21 @@ ParseTree *CompilerParser::compileTerm() {
             p_tree->addChild(mustBe("symbol", "["));
             p_tree->addChild(compileExpression());
             p_tree->addChild(mustBe("symbol", "]"));
+            return p_tree;
+        }
+        else if(current() && have("symbol", "(")) {
+            p_tree->addChild(mustBe("symbol", "("));
+            p_tree->addChild(compileExpressionList());
+            p_tree->addChild(mustBe("symbol", ")"));
+            return p_tree;
+        }
+        else if(current() && have("symbol", ".")) {
+            p_tree->addChild(mustBe("symbol", "."));
+            p_tree->addChild(mustBe("identifier", "("));
+            p_tree->addChild(mustBe("symbol", "("));
+            p_tree->addChild(compileExpressionList());
+            p_tree->addChild(mustBe("symbol", ")"));
+            return p_tree;
         }
         return p_tree;
     }
