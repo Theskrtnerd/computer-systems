@@ -204,7 +204,7 @@ Token* CompilerParser::current(){
  * Check if the current token matches the expected type and value.
  * @return true if a match, false otherwise
  */
-bool CompilerParser::have(std::string expectedType, std::string expectedValue=""){
+bool CompilerParser::have(std::string expectedType, std::string expectedValue){
     Token* token = this->current();
     if(token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue)) {
         return true;
@@ -217,7 +217,7 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue=""
  * If so, advance to the next token, returning the current token, otherwise throw a ParseException.
  * @return the current token before advancing
  */
-Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue=""){
+Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue){
     if(this->have(expectedType, expectedValue)) {
         Token* curr = this->current();
         this->next();

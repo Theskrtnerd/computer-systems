@@ -34,8 +34,8 @@ class CompilerParser {
         
         void next();
         Token* current();
-        bool have(std::string expectedType, std::string expectedValue);
-        Token* mustBe(std::string expectedType, std::string expectedValue);
+        bool have(std::string expectedType, std::string expectedValue="");
+        Token* mustBe(std::string expectedType, std::string expectedValue="");
 };
 
 class ParseException : public std::exception {
