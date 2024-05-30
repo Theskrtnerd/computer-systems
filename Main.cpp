@@ -13,10 +13,12 @@ int main(int argc, char *argv[]) {
      *     }
      */
     list<Token*> tokens;
-    tokens.push_back(new Token("keyword", "constructor"));
-    tokens.push_back(new Token("identifier", "Test"));
-    tokens.push_back(new Token("identifier", "new"));
+    tokens.push_back(new Token("keyword", "function"));
+    tokens.push_back(new Token("keyword", "char"));
+    tokens.push_back(new Token("identifier", "test"));
     tokens.push_back(new Token("symbol", "("));
+    tokens.push_back(new Token("keyword", "int"));
+    tokens.push_back(new Token("identifier", "test1"));
     tokens.push_back(new Token("symbol", ")"));
     tokens.push_back(new Token("symbol", "{"));
     tokens.push_back(new Token("symbol", "}"));

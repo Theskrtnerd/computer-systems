@@ -81,8 +81,8 @@ ParseTree* CompilerParser::compileSubroutine() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileParameterList() {
-    /*
     ParseTree* p_tree = new ParseTree("parameterList", "");
+    if(!current()) return p_tree;
     p_tree->addChild(mustBe("", "", "type")); // type
     p_tree->addChild(mustBe("identifier", "")); // varName
     while(have("symbol", ",")) {
@@ -90,7 +90,6 @@ ParseTree* CompilerParser::compileParameterList() {
         p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
     return p_tree;
-    */
     return NULL;
 }
 
