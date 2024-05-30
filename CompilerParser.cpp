@@ -81,6 +81,7 @@ ParseTree* CompilerParser::compileSubroutine() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileParameterList() {
+    /*
     ParseTree* p_tree = new ParseTree("parameterList", "");
     p_tree->addChild(mustBe("", "", "type")); // type
     p_tree->addChild(mustBe("identifier", "")); // varName
@@ -89,6 +90,8 @@ ParseTree* CompilerParser::compileParameterList() {
         p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
     return p_tree;
+    */
+    return NULL;
 }
 
 /**
