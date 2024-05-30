@@ -6,8 +6,8 @@
  * Constructor for the CompilerParser
  * @param tokens A linked list of tokens to be parsed
  */
-CompilerParser::CompilerParser(std::list<Token*> tokens) {
-    this->tokens = tokens;
+CompilerParser::CompilerParser(std::list<Token*> _tokens) {
+    tokens = _tokens;
 }
 
 /**
@@ -16,13 +16,13 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  */
 ParseTree* CompilerParser::compileProgram() {
     ParseTree* p_tree = new ParseTree("class", "class");
-    Token* token = this->mustBe("keyword", "class");
+    Token* token = mustBe("keyword", "class");
     p_tree->addChild(token);
-    token = this->mustBe("identifier", "Main");
+    token = mustBe("identifier", "Main");
     p_tree->addChild(token);
-    token = this->mustBe("symbol", "{");
+    token = mustBe("symbol", "{");
     p_tree->addChild(token);
-    token = this->mustBe("symbol", "}");
+    token = mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
 }
@@ -33,15 +33,15 @@ ParseTree* CompilerParser::compileProgram() {
  */
 ParseTree* CompilerParser::compileClass() {
     ParseTree* p_tree = new ParseTree("class", "class");
-    Token* token = this->mustBe("keyword", "class");
+    Token* token = mustBe("keyword", "class");
     p_tree->addChild(token);
-    token = this->mustBe("identifier");
+    token = mustBe("identifier");
     p_tree->addChild(token);
-    token = this->mustBe("symbol", "{");
+    token = mustBe("symbol", "{");
     p_tree->addChild(token);
-    while(this->have("keyword", "static") || this->have("keyword", "field")) p_tree->addChild(this->compileClassVarDec());
-    while(this->have("keyword", "function")) p_tree->addChild(this->compileSubroutine());
-    token = this->mustBe("symbol", "}");
+    while(have("keyword", "static") || have("keyword", "field")) p_tree->addChild(compileClassVarDec());
+    while(have("keyword", "function")) p_tree->addChild(compileSubroutine());
+    token = mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
 }
@@ -52,15 +52,15 @@ ParseTree* CompilerParser::compileClass() {
  */
 ParseTree* CompilerParser::compileClassVarDec() {
     ParseTree* p_tree = new ParseTree("classVarDec", "classVarDec");
-    if(this->have("keyword", "static") || this->have("keyword", "field")){
-        p_tree->addChild(this->current());
-        this->next();
+    if(have("keyword", "static") || have("keyword", "field")){
+        p_tree->addChild(current());
+        next();
     };
-    Token* token = this->mustBe("keyword");
+    Token* token = mustBe("keyword");
     p_tree->addChild(token);
-    token = this->mustBe("identifier");
+    token = mustBe("identifier");
     p_tree->addChild(token);
-    token = this->mustBe("symbol", ";");
+    token = mustBe("symbol", ";");
     p_tree->addChild(token);
     return p_tree;
 }
@@ -71,19 +71,19 @@ ParseTree* CompilerParser::compileClassVarDec() {
  */
 ParseTree* CompilerParser::compileSubroutine() {
     ParseTree* p_tree = new ParseTree("subroutine", "subroutine");
-    Token* token = this->mustBe("keyword", "function");
+    Token* token = mustBe("keyword", "function");
     p_tree->addChild(token);
-    token = this->mustBe("keyword", "void");
+    token = mustBe("keyword", "void");
     p_tree->addChild(token);
-    if(this->current()->getType() != "identifier") throw ParseException();
-    p_tree->addChild(this->current());
-    this->next();
-    token = this->mustBe("symbol", "(");
+    if(current()->getType() != "identifier") throw ParseException();
+    p_tree->addChild(current());
+    next();
+    token = mustBe("symbol", "(");
     p_tree->addChild(token);
-    if(this->have("keyword", "int")) p_tree->addChild(this->compileParameterList());
-    token = this->mustBe("symbol", ")");
+    if(have("keyword", "int")) p_tree->addChild(compileParameterList());
+    token = mustBe("symbol", ")");
     p_tree->addChild(token);
-    p_tree->addChild(this->compileSubroutineBody());
+    p_tree->addChild(compileSubroutineBody());
     return p_tree;
 }
 
@@ -101,11 +101,11 @@ ParseTree* CompilerParser::compileParameterList() {
  */
 ParseTree* CompilerParser::compileSubroutineBody() {
     ParseTree* p_tree = new ParseTree("subroutineBody", "subroutineBody");
-    Token* token = this->mustBe("symbol", "{");
+    Token* token = mustBe("symbol", "{");
     p_tree->addChild(token);
-    if(this->have("keyword", "var")) p_tree->addChild(this->compileVarDec());
-    if(this->have("keyword", "let")) p_tree->addChild(this->compileStatements());
-    token = this->mustBe("symbol", "}");
+    if(have("keyword", "var")) p_tree->addChild(compileVarDec());
+    if(have("keyword", "let")) p_tree->addChild(compileStatements());
+    token = mustBe("symbol", "}");
     p_tree->addChild(token);
     return p_tree;
 }
@@ -195,8 +195,8 @@ ParseTree* CompilerParser::compileExpressionList() {
  * Advance to the next token
  */
 void CompilerParser::next(){
-    if(!this->tokens.empty()){
-        this->tokens.pop_front();
+    if(!tokens.empty()){
+        tokens.pop_front();
     }
     return;
 }
@@ -206,7 +206,7 @@ void CompilerParser::next(){
  * @return the Token
  */
 Token* CompilerParser::current(){
-    return this->tokens.front();
+    return tokens.front();
 }
 
 /**
@@ -214,7 +214,7 @@ Token* CompilerParser::current(){
  * @return true if a match, false otherwise
  */
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){
-    Token* token = this->current();
+    Token* token = current();
     if(token->getType() == expectedType && (expectedValue == "" || token->getValue() == expectedValue)) {
         return true;
     }
@@ -227,9 +227,9 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue){
  * @return the current token before advancing
  */
 Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue){
-    if(this->have(expectedType, expectedValue)) {
-        Token* curr = this->current();
-        this->next();
+    if(have(expectedType, expectedValue)) {
+        Token* curr = current();
+        next();
         return curr;
     }
     std::cout << expectedType << " " << expectedValue << "\n";
