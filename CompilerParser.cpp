@@ -98,7 +98,13 @@ ParseTree* CompilerParser::compileParameterList() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileSubroutineBody() {
-    return NULL;
+    ParseTree* p_tree = new ParseTree("subroutineBody", "subroutineBody");
+    Token* token = this->mustBe("symbol", "{");
+    if(this->have("keyword", "var")) p_tree->addChild(this->compileVarDec());
+    if(this->have("keyword", "let")) p_tree->addChild(this->compileStatements());
+    token = this->mustBe("symbol", "}");
+    p_tree->addChild(token);
+    return p_tree;
 }
 
 /**
