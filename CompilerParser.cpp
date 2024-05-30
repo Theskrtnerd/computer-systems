@@ -56,10 +56,8 @@ ParseTree* CompilerParser::compileClassVarDec() {
     }; // type
     p_tree->addChild(mustBe("identifier")); // varName
     while(have("symbol", ",")) {
-        Token* token = mustBe("symbol", ",");
-        p_tree->addChild(token);
-        Token* token = mustBe("identifier");
-        p_tree->addChild(token);
+        p_tree->addChild(mustBe("symbol", ","));
+        p_tree->addChild(mustBe("identifier"));
     } // ("," varName)*
     p_tree->addChild(mustBe("symbol", ";")); // ";"
     return p_tree;

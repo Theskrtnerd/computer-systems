@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
      */
     list<Token*> tokens;
     tokens.push_back(new Token("keyword", "constructor"));
-    tokens.push_back(new Token("keyword", "Test"));
+    tokens.push_back(new Token("identifier", "Test"));
     tokens.push_back(new Token("identifier", "new"));
     tokens.push_back(new Token("symbol", "("));
     tokens.push_back(new Token("symbol", ")"));
