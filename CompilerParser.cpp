@@ -1,4 +1,5 @@
 #include "CompilerParser.h"
+#include <iostream>
 
 
 /**
@@ -31,7 +32,18 @@ ParseTree* CompilerParser::compileProgram() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClass() {
-    return NULL;
+    ParseTree* p_tree = new ParseTree("class", "class");
+    Token* token = this->mustBe("keyword", "class");
+    p_tree->addChild(token);
+    token = this->mustBe("identifier", "Main");
+    p_tree->addChild(token);
+    token = this->mustBe("symbol", "{");
+    p_tree->addChild(token);
+    ParseTree* classVarDec = this->compileClassVarDec();
+    p_tree->addChild(classVarDec);
+    token = this->mustBe("symbol", "}");
+    p_tree->addChild(token);
+    return p_tree;
 }
 
 /**
@@ -39,7 +51,16 @@ ParseTree* CompilerParser::compileClass() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClassVarDec() {
-    return NULL;
+    ParseTree* p_tree = new ParseTree("classVarDec", "classVarDec");
+    Token* token = this->mustBe("keyword", "static");
+    p_tree->addChild(token);
+    token = this->mustBe("keyword", "int");
+    p_tree->addChild(token);
+    token = this->mustBe("identifier", "a");
+    p_tree->addChild(token);
+    token = this->mustBe("symbol", ";");
+    p_tree->addChild(token);
+    return p_tree;
 }
 
 /**
@@ -188,6 +209,7 @@ Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValu
         this->next();
         return curr;
     }
+    std::cout << expectedType << " " << expectedValue << "\n";
     throw ParseException();
 }
 
