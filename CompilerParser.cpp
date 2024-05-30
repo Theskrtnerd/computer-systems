@@ -87,10 +87,10 @@ ParseTree* CompilerParser::compileParameterList() {
     p_tree->addChild(mustBe("identifier", "")); // varName
     while(current() && have("symbol", ",")) {
         p_tree->addChild(mustBe("symbol", ","));
+        p_tree->addChild(mustBe("", "", "type"));
         p_tree->addChild(mustBe("identifier", ""));
     } // ("," varName)*
     return p_tree;
-    return NULL;
 }
 
 /**
